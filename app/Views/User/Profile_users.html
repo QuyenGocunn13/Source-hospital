@@ -1,0 +1,109 @@
+{% extends '_Layoutuser.html' %}
+
+{% block content %}
+<style>
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+    .container {
+        max-width: 800px; /* Giới hạn chiều rộng */
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9; /* Nền sáng nhẹ */
+        border-radius: 8px; /* Bo góc */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+        margin-left: 20px; /* Di chuyển khung sang trái */
+    }
+    
+    .welcome-text {
+        font-size: 32px; /* Kích thước lớn cho tiêu đề chính */
+        color: #2c3e50; /* Màu sắc hài hòa */
+        text-align: center; /* Canh giữa */
+        margin-bottom: 10px;
+        font-weight: bold; /* Làm đậm tiêu đề chính */
+    }
+
+    .subtitle {
+        text-align: center; /* Canh giữa */
+        font-size: 24px; /* Kích thước lớn cho phụ đề */
+        color: #34495e; /* Màu sắc hài hòa */
+        margin-bottom: 30px; /* Khoảng cách phía dưới */
+    }
+
+    .profile-info {
+        margin-bottom: 20px; /* Khoảng cách giữa các mục thông tin */
+        padding: 15px;
+        border: 1px solid #ddd; /* Đường viền nhẹ */
+        border-radius: 8px; /* Bo góc */
+        background-color: #ffffff; /* Nền trắng */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ cho khối thông tin */
+    }
+
+    .profile-info h3 {
+        margin: 0; /* Bỏ margin cho tiêu đề thông tin */
+        font-size: 22px; /* Kích thước lớn cho tiêu đề thông tin */
+        color: #009879; /* Màu sắc nổi bật cho tiêu đề */
+        font-weight: bold; /* Làm đậm tiêu đề thông tin */
+    }
+
+    .profile-info p {
+        margin: 5px 0; /* Khoảng cách giữa các đoạn */
+        font-size: 18px; /* Kích thước chữ lớn hơn để dễ đọc */
+        color: #34495e; /* Màu chữ */
+        display: inline; /* Hiển thị inline để kết hợp với nút */
+    }
+
+    .toggle-password {
+        cursor: pointer; /* Hiển thị con trỏ khi hover */
+        color: #007bff; /* Màu chữ cho icon */
+        margin-left: 10px; /* Khoảng cách giữa mật khẩu và icon */
+        font-size: 20px; /* Kích thước icon */
+        vertical-align: middle; /* Canh giữa với dòng chữ */
+        transition: color 0.3s; /* Hiệu ứng chuyển màu mượt mà */
+    }
+
+    .toggle-password:hover {
+        color: #0056b3; /* Màu khi hover */
+    }
+</style>
+
+<div class="container">
+    <h1 class="welcome-text">Welcome, {{ username }}!</h1>
+    <h2 class="subtitle">Doctor Profiles</h2>
+
+    {% for doctor in doctors %}
+    <div class="profile-info">
+        <h3>Doctor ID:</h3>
+        <p>{{ doctor.doctor_id }}</p>
+        <h3>Name:</h3>
+        <p>{{ doctor.name }}</p>
+        <h3>Specialty:</h3>
+        <p>{{ doctor.specialty }}</p>
+        <h3>Username:</h3>
+        <p>{{ doctor.username }}</p>
+        <h3>Password:</h3>
+        <p id="password-{{ doctor.doctor_id }}" style="display: none;">{{ doctor.password }}</p>
+        <span class="toggle-password" onclick="togglePassword('{{ doctor.doctor_id }}')">
+            <i class="fas fa-eye"></i>
+        </span>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function togglePassword(doctorId) {
+        const passwordField = document.getElementById(`password-${doctorId}`);
+        const toggleButton = document.querySelector(`.toggle-password[onclick*='${doctorId}'] i`);
+
+        if (passwordField.style.display === "none") {
+            passwordField.style.display = "inline"; // Hiển thị mật khẩu
+            toggleButton.classList.remove('fa-eye'); // Đổi icon thành dấu gạch chéo
+            toggleButton.classList.add('fa-eye-slash');
+        } else {
+            passwordField.style.display = "none"; // Ẩn mật khẩu
+            toggleButton.classList.remove('fa-eye-slash'); // Đổi icon về dấu mắt
+            toggleButton.classList.add('fa-eye');
+        }
+    }
+</script>
+
+{% endblock %}

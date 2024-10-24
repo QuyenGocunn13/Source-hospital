@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Bệnh Viện HUIT</title>
+    <link rel="icon" href="{{ url_for('static', filename='Assets/huitlogo.png') }}" type="image/png">
+    <style>
+        /* Custom nav styles */
+        .navbar {
+            background-color: #0dcaf0; /* Màu nền tươi sáng */
+        }
+        .navbar a {
+            color: #ffffff; /* Màu chữ trắng */
+        }
+        .navbar a:hover {
+            color: #ffe600; /* Màu chữ khi hover */
+        }
+        /* Nút đăng nhập */
+        .login-button {
+            background-color: #f39c12; /* Màu nền cam cho nút */
+            color: #ffffff; /* Màu chữ trắng cho nút */
+        }
+        .login-button:hover {
+            background-color: #e67e22; /* Màu nền cam đậm khi hover */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header bg-gray-100">
+        <nav class="navbar p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center">
+                    <a href="{{ url_for('shared.index') }}" class="font-bold text-2xl text-white">Bệnh Viện HUIT</a>
+                </div>
+                <div class="space-x-6">
+                    <a href="{{ url_for('shared.index') }}" class="hover:text-yellow-400">Trang chủ</a>
+                    <a href="{{ url_for('shared.about') }}" class="hover:text-yellow-400">Về chúng tôi</a>
+                    <a href="{{ url_for('shared.dichvu') }}" class="hover:text-yellow-400">Dịch vụ</a>
+                    <a href="{{ url_for('shared.contact') }}" class="hover:text-yellow-400">Liên hệ</a>
+                </div>
+                <div class="login-options">
+                    <a href="{{ url_for('auth.login') }}" class="login-button px-5 py-2 rounded-lg shadow-md transition duration-300 transform hover:scale-105">
+                        Đăng nhập
+                    </a>                    
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <main>
+        {% block content %}
+        <!-- Nội dung trang sẽ được chèn tại đây -->
+        {% endblock %}
+    </main>
+
+    <footer class="bg-white dark:bg-gray-900">
+        <div class="mx-auto w-full max-w-screen-xl">
+            <div class="grid grid-cols-2 gap-8 px-4 py-6 lg:py-8 md:grid-cols-4">
+                <div>
+                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Thông tin thêm</h2>
+                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Đặt lịch hẹn</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Tuyển dụng</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Quy định sử dụng</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Chính sách bảo mật thông tin</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">LIÊN KẾT MẠNG XÃ HỘI</h2>
+                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Kaggle</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Twitter</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Facebook</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">GitHub</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Trụ Sở</h2>
+                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Khoa Công Nghệ Thông Tin - Trường Đại học Công Thương TP.HCM</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP.HCM</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Hotline: 1800 6767</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Email: <a>maithoi60@gmail.com</a></a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Giờ làm việc</h2>
+                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Từ thứ 2 đến Chủ nhật</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Buổi sáng: 7:00 – 12:00</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Buổi chiều: 13:30 – 17:00</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="#" class="hover:underline">Hotline: 1800 6767</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="px-4 py-6 bg-gray-100 dark:bg-gray-700 md:flex md:items-center md:justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-300 sm:text-center">© 2024 <a href="https://discord.com/channels/@me">Trong</a>. All Rights Reserved.</span>
+                <div class="flex mt-4 sm:justify-center md:mt-0 space-x-5 rtl:space-x-reverse">
+                    <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                        <i class="fa-brands fa-facebook"></i>
+                        <span class="sr-only">Facebook page</span>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                        <i class="fa-brands fa-discord"></i>
+                        <span class="sr-only">Discord community</span>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                        <i class="fa-solid fa-x"></i>
+                        <span class="sr-only">Twitter page</span>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                        <i class="fa-brands fa-github"></i>
+                        <span class="sr-only">GitHub account</span>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                        <i class="fa-brands fa-kaggle"></i>
+                        <span class="sr-only">Dribbble account</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

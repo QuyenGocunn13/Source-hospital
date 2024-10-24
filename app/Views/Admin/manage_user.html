@@ -1,0 +1,135 @@
+{% extends "_Layoutadmin.html" %}
+
+{% block content %}
+<style>
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .search-container input,
+    .search-container select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 0.875rem; /* Kích thước chữ */
+    }
+
+    .search-container select {
+        margin-left: 10px;
+    }
+
+    /* Định dạng cho table */
+    table {
+        width: 100%;
+        border-collapse: collapse; /* Xóa khoảng cách giữa các cell */
+        background-color: #ffffff; /* Màu nền trắng */
+    }
+
+    th, td {
+        padding: 12px 15px; /* Thay đổi padding để dễ nhìn hơn */
+        text-align: left;
+        border-bottom: 1px solid #ddd; /* Đường kẻ cho các hàng */
+    }
+
+    th {
+        background-color: #333; /* Màu nền cho header */
+        color: white; /* Màu chữ cho header */
+    }
+
+    tr:hover {
+        background-color: #f1f1f1; /* Màu nền khi hover */
+    }
+
+    .action-btns {
+        display: flex;
+        gap: 10px; /* Khoảng cách giữa các nút */
+    }
+
+    .action-btn {
+        padding: 6px 10px; /* Padding cho nút */
+        border-radius: 5px;
+        background-color: #e0e0e0; /* Màu nền cho nút */
+        color: #333; /* Màu chữ cho nút */
+        text-decoration: none; /* Không gạch chân */
+        transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+    }
+
+    .action-btn:hover {
+        background-color: #c0c0c0; /* Màu nền khi hover */
+    }
+
+    .action-btn i {
+        margin-right: 5px; /* Khoảng cách giữa icon và chữ */
+    }
+</style>
+
+<div class="flex-container">
+    <div class="search-container">
+        <select id="department-dropdown">
+            <option value="">Chọn Khoa</option>
+            {% for room in rooms %}
+                <option value="{{ room.room_id }}">{{ room.room_type }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" id="search-input" placeholder="Tìm kiếm khoa..." onkeyup="filterDepartments()">
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã Khoa</th>
+                    <th>Tên Khoa</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody id="department-table-body">
+                {% for room in rooms %}
+                <tr>
+                    <td>{{ room.room_id }}</td>
+                    <td>{{ room.room_type }}</td>
+                    <td>
+                        <div class="action-btns">
+                            <a href="{{ url_for('admin.doctors_by_room', room_id=room.room_id) }}" class="action-btn"><i class="fa-solid fa-eye"></i></a>
+                            <a href="#" class="action-btn"><i class="fa-solid fa-trash"></i></a>
+                            <a href="#" class="action-btn"><i class="fa-solid fa-edit"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function filterDepartments() {
+        const input = document.getElementById('search-input');
+        const filter = input.value.toLowerCase();
+        const tableBody = document.getElementById('department-table-body');
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const cell = rows[i].getElementsByTagName('td')[1]; // Chọn cột Tên Khoa
+            if (cell) {
+                const txtValue = cell.textContent || cell.innerText;
+                rows[i].style.display = txtValue.toLowerCase().includes(filter) ? "" : "none";
+            }
+        }
+    }
+</script>
+{% endblock %}

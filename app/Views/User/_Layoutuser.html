@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8; /* Màu nền nhạt */
+            color: #333;
+        }
+
+        .main-content {
+            background-color: #ffffff; /* Màu nền trắng cho nội dung */
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+        }
+
+        .nav-bar {
+            background-color: #4caf50; /* Màu xanh lá cây tươi sáng */
+            color: white;
+            width: 250px;
+            height: 100vh;
+            transition: width 0.3s ease;
+            position: fixed;
+            overflow-y: auto;
+        }
+
+        .nav-bar.collapsed {
+            width: 60px;
+        }
+
+        .nav-bar a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .element-navbar div {
+            position: relative;
+            transition: background-color 0.3s ease;
+            padding: 10px 20px;
+            font-size: 1.125rem; /* Tăng kích thước chữ trong sidebar */
+        }
+
+        .element-navbar div:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .element-navbar a:hover {
+            color: #DDEBF9;
+        }
+
+        .nav-bar.collapsed .element-navbar div {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .nav-bar.collapsed .element-navbar div a {
+            display: none;
+        }
+
+        .nav-bar.collapsed i {
+            margin: 0;
+            display: block;
+        }
+
+        /* Sidebar title with icon */
+        .title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            background-color: #388e3c; /* Màu xanh lá cây đậm hơn cho tiêu đề */
+            color: white;
+        }
+
+        .title i {
+            margin-right: 10px;
+        }
+
+        .nav-bar.collapsed .title h2 {
+            display: none;
+        }
+
+        .nav-bar.collapsed .title i {
+            margin: 0;
+        }
+
+        .logout-btn a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80%;
+            padding: 10px 16px;
+            margin: 20px auto;
+            border-radius: 6px;
+            background-color: white; /* Nền trắng */
+            color: #6c757d; /* Màu xám dịu cho chữ của nút đăng xuất */
+            font-size: 1.125rem; /* Tăng kích thước chữ cho nút đăng xuất */
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            text-decoration: none; /* Loại bỏ gạch chân */
+        }
+
+        .logout-btn span {
+            margin-right: 10px; /* Add margin between the text and the icon */
+        }
+
+        .logout-btn a:hover {
+            background-color: #ff4d4d; /* Màu đỏ khi hover */
+            color: white; /* Màu trắng cho chữ khi hover */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-bar.collapsed .logout-btn {
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .nav-bar.collapsed .logout-btn span {
+            display: none;
+        }
+
+        /* Header and other components */
+        .header {
+            background-color: #ffffff; /* Màu trắng cho header */
+            border-bottom: 1px solid #ddd;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #1f1f1f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="h-screen flex">
+        <div class="nav-bar" id="sidebar">
+            <div class="title">
+                <i class="fa-solid fa-user-shield"></i> <!-- Icon added next to Admin text -->
+                <h2 class="text-3xl">User</h2>
+            </div>
+            <hr class="my-2">
+            <nav class="element-navbar pt-4">
+                <div>
+                    <i class="mr-3 fa-solid fa-user"></i><a href="{{ url_for('user.user') }}">Hồ Sơ</a>
+                </div>
+                <div>
+                    <i class="mr-3 fa-solid fa-calendar"></i><a href="{{ url_for('user.schedule') }}">Lịch làm việc</a>
+                </div>                
+                <div>
+                    <i class="mr-3 fa-solid fa-hospital"></i><a href="">Thông Báo</a>
+                </div>
+                <div>
+                    <i class="mr-3 fa-solid fa-message"></i><a href="">Tin Nhắn</a>
+                </div>
+            </nav>
+            <!-- Logout button -->
+            <div class="logout-btn">
+                <a href="{{ url_for('auth.logout') }}" class="flex items-center space-x-2">
+                    <span>Đăng Xuất</span>
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+        <div class="main-content w-full" id="content">
+            <div class="header">
+                <div class="flex items-center">
+                    <i id="toggleButton" class="fa-solid fa-bars pr-2 fa-lg cursor-pointer"></i>
+                    <h1 class="text-2xl font-semibold">Dashboard</h1>
+                </div>
+            </div>
+            <main>
+                {% block content %}
+                <!-- Nội dung trang sẽ được chèn tại đây -->
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('toggleButton').addEventListener('click', function () {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+            const content = document.getElementById('content');
+            content.style.marginLeft = sidebar.classList.contains('collapsed') ? '60px' : '250px';
+        });
+    </script>
+</body>
+
+</html>

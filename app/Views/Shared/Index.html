@@ -1,0 +1,260 @@
+{% extends "_Layout.html" %}
+
+{% block title %}
+Trang Chủ - My Website
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Font setup */
+    body {
+        font-family: 'Inter', sans-serif;
+        line-height: 1.6;
+    }
+
+    .title h1 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .section {
+        padding: 40px 20px;
+    }
+
+    .section-light {
+        background-color: #f9f9f9;
+    }
+
+    .service {
+        background-color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 20px;
+        padding: 24px;
+        max-width: 350px;
+        transition: transform 0.3s ease;
+    }
+
+    .service:hover {
+        transform: translateY(-10px);
+    }
+
+    .service img {
+        border-radius: 15px;
+        width: 100%;
+        height: auto;
+    }
+
+    .service h1 {
+        font-size: 20px;
+        margin: 20px 0 10px;
+        color: #333;
+    }
+
+    .service p {
+        font-size: 18px;
+        color: #2c7a7b;
+        margin-bottom: 20px;
+    }
+
+    .service .btn {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn a {
+        padding: 10px 20px;
+        border-radius: 30px;
+        transition: 0.3s;
+    }
+
+    .btn a:hover {
+        background-color: #2c7a7b;
+        color: white;
+    }
+
+    .advisory-form input {
+        border-radius: 30px;
+        padding: 12px 15px;
+        border: 2px solid #ccc;
+        font-size: 16px;
+    }
+
+    .advisory-form button {
+        padding: 12px 30px;
+        background-color: #2c7a7b;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+    }
+
+    .about-us {
+        background-color: #ffffff;
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .about-us h2 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #1d3557;
+    }
+
+    .about-us p {
+        color: #555;
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    .stats {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .stats div {
+        text-align: center;
+    }
+
+    .stats h3 {
+        font-size: 40px;
+        color: #2c7a7b;
+        margin-bottom: 8px;
+    }
+
+    .stats h6 {
+        font-size: 18px;
+        color: #555;
+    }
+
+    /* Giới thiệu nhóm */
+    .group-info {
+        background-color: #f3f4f6;
+        padding: 50px 20px;
+        text-align: center;
+        margin-top: 40px;
+        border-radius: 10px;
+    }
+
+    .group-info h2 {
+        font-size: 28px;
+        font-weight: bold;
+        color: #1d3557;
+        margin-bottom: 20px;
+    }
+
+    .group-info p {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+    .group-info span {
+        font-weight: 700;
+        color: #2c7a7b;
+    }
+
+    /* Banner chạy chữ */
+    .marquee {
+        overflow: hidden;
+        white-space: nowrap;
+        box-sizing: border-box;
+        background-color: #f39c12; /* Màu nền banner */
+        color: #fff; /* Màu chữ */
+        padding: 10px 0; /* Khoảng cách trên và dưới */
+    }
+
+    .marquee p {
+        display: inline-block;
+        padding-left: 100%; /* Bắt đầu từ bên ngoài bên trái */
+        animation: marquee 15s linear infinite; /* Thay đổi thời gian để điều chỉnh tốc độ */
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translate(0);
+        }
+        100% {
+            transform: translate(-100%);
+        }
+    }
+</style>
+
+<!-- Banner chạy chữ -->
+<div class="marquee">
+    <p>🏥 Tư Vấn Miễn Phí - Đăng kí ngay để được tư vấn miễn phí! 🏥</p>
+</div>
+
+<!-- Banner hình ảnh -->
+<div class="banner my-3">
+    <img src="https://benhvientantao.com/wp-content/uploads/2021/12/banner-chuyen-khoa-dich-vu.jpg" alt="" class="w-full rounded-lg">
+    <div class="relative isolate bg-gray-100 p-6 flex justify-between items-center rounded-lg mt-5">
+        <p class="text-sm text-gray-900">
+            <strong class="font-semibold">Tư Vấn Miễn Phí</strong> - Đăng kí ngay để được tư vấn miễn phí!
+            <strong class="font-semibold">Đặt Khám Liền Tay</strong> - Nhận ưu đãi lên đến 5%!
+            <strong class="font-semibold">Chăm Sóc Sức Khỏe Toàn Diện</strong> - Đừng bỏ lỡ cơ hội cải thiện sức khỏe của bạn!
+        </p>
+        <a href="#" class="bg-teal-600 text-white px-4 py-2 rounded-full">Đặt Lịch Ngay</a>
+    </div>
+</div>
+
+<!-- Group Introduction Section -->
+<div class="group-info">
+    <h2>Giới Thiệu Nhóm 5</h2>
+    <p>
+        Chúng tôi là <span>Nhóm 5</span>, với đề tài <span>"Sử dụng thuật toán Genetic algorithm cho bài toán xếp lịch bệnh viện đa khoa"</span>.
+    </p>
+    <p>
+        Đề tài này nhằm tìm giải pháp tối ưu cho việc xếp lịch bệnh viện bằng cách áp dụng thuật toán di truyền, giúp quản lý lịch làm việc của bác sĩ và phòng khám một cách hiệu quả.
+    </p>
+</div>
+
+<!-- Team Members Section -->
+<section class="py-24 bg-gray-100">
+    <div class="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-10">Thành Viên Nhóm 5</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <!-- Member 1 -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold text-gray-900">Nguyễn Sang Trọng</h3>
+                <p class="text-gray-600">Developer</p>
+            </div>
+            <!-- Member 2 -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold text-gray-900">Trương Minh Nhựt</h3>
+                <p class="text-gray-600">Developer</p>
+            </div>
+            <!-- Member 3 -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold text-gray-900">Trần Huỳnh Phụng Quyên</h3>
+                <p class="text-gray-600">Developer</p>
+            </div>
+            <!-- Member 4 -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold text-gray-900">Dương Trọng Đức</h3>
+                <p class="text-gray-600">Developer</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Free Consultation Section -->
+<div class="advisory section section-light flex justify-center">
+    <div class="w-9/12 bg-white p-10 rounded-lg shadow-lg">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Đăng Kí Tư Vấn</h2>
+        </div>
+        <form action="" class="advisory-form flex justify-between gap-3">
+            <input type="text" placeholder="Họ Tên" required>
+            <input type="text" placeholder="Số Điện Thoại" required>
+            <input type="text" placeholder="Dịch Vụ Cần Tư Vấn" required>
+            <button type="submit">Tư Vấn Ngay</button>
+        </form>
+        <div class="text-center mt-4">
+            <p class="text-sm text-gray-500">(*) Cam kết bảo mật thông tin</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

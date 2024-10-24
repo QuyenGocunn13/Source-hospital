@@ -1,0 +1,93 @@
+{% extends "_Layoutadmin.html" %}
+
+{% block content %}
+<style>
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    /* Định dạng cho table */
+    table {
+        width: 100%;
+        border-collapse: collapse; /* Xóa khoảng cách giữa các cell */
+        background-color: #ffffff; /* Màu nền trắng */
+    }
+
+    th, td {
+        padding: 12px 15px; /* Thay đổi padding để dễ nhìn hơn */
+        text-align: left;
+        border-bottom: 1px solid #ddd; /* Đường kẻ cho các hàng */
+    }
+
+    th {
+        background-color: #333; /* Màu nền cho header */
+        color: white; /* Màu chữ cho header */
+    }
+
+    tr:hover {
+        background-color: #f1f1f1; /* Màu nền khi hover */
+    }
+
+    /* Nút "Xem" */
+    .view-btn {
+        display: inline-flex;
+        align-items: center; /* Căn giữa icon và chữ */
+        padding: 6px 10px; /* Padding cho nút */
+        border-radius: 5px;
+        background-color: #e0e0e0; /* Màu nền cho nút Xem */
+        color: #333; /* Màu chữ cho nút Xem */
+        text-decoration: none; /* Không gạch chân */
+        transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+    }
+
+    .view-btn:hover {
+        background-color: #388e3c; 
+    }
+
+    .view-btn i {
+        margin-right: 5px; 
+    }
+</style>
+
+<h2 class="text-2xl font-semibold mb-4">Danh sách bác sĩ trong {{ room.room_type }}</h2>
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg overflow-hidden">
+        <thead>
+            <tr>
+                <th class="px-4 py-3 w-1/5">Mã Bác Sĩ</th> 
+                <th class="px-6 py-3">Tên Bác Sĩ</th>
+                <th class="px-6 py-3">Chuyên Khoa</th>
+                <th class="px-6 py-3">Thời Gian</th>
+                <th class="px-6 py-3">Hành Động</th> 
+            </tr>
+        </thead>
+        <tbody class="text-sm text-gray-700">
+            {% for doctor in doctors %}
+            <tr class="border-b hover:bg-gray-100 transition-colors duration-200">
+                <td class="px-4 py-4 text-center">{{ doctor.doctor_id }}</td> 
+                <td class="px-6 py-4">{{ doctor.name }}</td>
+                <td class="px-6 py-4">{{ doctor.specialty }}</td>
+                <td class="px-6 py-4">{{ doctor.time_slot }}</td>
+                <td class="px-6 py-4 text-center"> 
+                    <a href="#" class="view-btn">
+                        <i class="fa-solid fa-eye"></i> 
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('admin.manage_users') }}" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500 transition duration-200">Quay lại</a>
+</div>
+{% endblock %}
