@@ -1,11 +1,11 @@
-room_id,room_type
-1,Phòng Khoa khám bệnh
-2,Phòng Khoa Hồi sức cấp cứu
-3,Phòng Khoa Nội tổng hợp
-4,Phòng Khoa Nội tim mạch
-5,Phòng Khoa Nội tiêu hóa
-6,Phòng Khoa Nội cơ xương khớp
-7,Phòng Khoa Nội thận
-8,Phòng Khoa Nội tiết
-9,Phòng Khoa Dị ứng
-10,Phòng Khoa Da Liễu
+room_id,room_type,specialty_id
+1,Phòng khám bệnh,1
+2,Phòng Hồi sức cấp cứu,2
+3,Phòng Nội tổng hợp,3
+4,Phòng Nội tim mạch,4
+5,Phòng Nội tiêu hóa,5
+6,Phòng Nội cơ xương khớp,6
+7,Phòng Nội thận,7
+8,Phòng Nội tiết,8
+9,Phòng Dị ứng,9
+10,Phòng Da Liễu,10

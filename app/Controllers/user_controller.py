@@ -20,6 +20,16 @@ def read_doctors_and_users():
     # Chuyển đổi DataFrame thành danh sách các từ điển
     return result.to_dict(orient='records')
 
+def read_schedule():
+    # Đường dẫn đến file schedule.csv
+    schedule_csv_path = os.path.join(os.path.dirname(__file__), '../Models/schedule.csv')
+    # Đọc file CSV
+    schedule_df = pd.read_csv(schedule_csv_path)
+    # Chọn các cột cần thiết
+    result = schedule_df[['doctor_id', 'room_id', 'time_slot_id', 'day']]
+    # Chuyển đổi DataFrame thành danh sách các từ điển
+    return result.to_dict(orient='records')
+
 @user_bp.route('/')
 def user():
     if 'user' in session:
@@ -34,4 +44,6 @@ def user():
 
 @user_bp.route('/schedule')
 def schedule():
-    return render_template('schedule.html')
+    # Đọc lịch từ file schedule.csv
+    schedule_data = read_schedule()
+    return render_template('schedule.html', schedule=schedule_data)
