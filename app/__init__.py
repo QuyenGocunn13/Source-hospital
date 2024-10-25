@@ -1,5 +1,6 @@
 import os
 from flask import Flask, redirect, url_for, render_template
+from datetime import datetime
 from Controllers.shared_controller import shared_bp
 from Controllers.admin_controller import admin_bp
 from Controllers.user_controller import user_bp
@@ -17,6 +18,17 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(user_bp, url_prefix='/user')
     app.register_blueprint(auth_bp, url_prefix='/auth')  
+    
+    # Đúng cách: không cần truyền tên filter dưới dạng chuỗi
+    @app.add_template_filter
+    def format_date(value, format="%d/%m/%Y"):
+        try:
+            # Nếu giá trị là chuỗi, chuyển sang datetime object
+            if isinstance(value, str):
+                value = datetime.strptime(value, '%Y-%m-%d')  # Giả sử input là yyyy-mm-dd
+            return value.strftime(format)
+        except ValueError:
+            return value  # Trả về giá trị ban đầu nếu không thể chuyển đổi
 
     @app.route('/')
     def home():

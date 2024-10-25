@@ -5,9 +5,9 @@ import calendar
 
 # Định nghĩa các lớp trước khi sử dụng
 class Doctor:
-    def __init__(self, doctor_id, specialty):
+    def __init__(self, doctor_id, specialty_name):
         self.id = doctor_id
-        self.specialty = specialty
+        self.specialty_name = specialty_name
 
 class Room:
     def __init__(self, room_id, room_type):
@@ -37,8 +37,8 @@ class CSVReader:
             reader = csv.DictReader(file)
             for row in reader:
                 doctor_id = int(row['doctor_id'])
-                specialty = row['specialty']
-                doctors.append(Doctor(doctor_id, specialty))
+                specialty_name = row['specialty_name']
+                doctors.append(Doctor(doctor_id, specialty_name))
         return doctors
 
     @staticmethod
@@ -130,7 +130,7 @@ class GeneticAlgorithm:
                 violations += 1500
             room_timeslot[(doctor_id, room_id, timeslot_id)] = doctor_id
 
-            if room_info.type != doctor_info.specialty:
+            if room_info.type != doctor_info.specialty_name:
                 violations += 1000
 
             if (doctor_id, day) not in doctor_day_slots:

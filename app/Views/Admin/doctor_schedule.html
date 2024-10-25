@@ -1,0 +1,115 @@
+{% extends "_Layoutadmin.html" %}
+
+{% block content %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .schedule-card {
+        border: 1px solid #4CAF50;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #e8f5e9;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-slot {
+        color: #bbb;
+        font-style: italic;
+    }
+
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #45a049;
+    }
+
+    .btn-secondary {
+        background-color: #008CBA;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #007bb5;
+    }
+</style>
+
+<h2>Lịch làm việc của Bác Sĩ {{ doctor.name }} (Mã Bác Sĩ: {{ doctor.doctor_id }})</h2>
+<p>Phòng: {{ room.room_type }}</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Ca trực</th>
+            {% for day in range(1, 8) %}
+                {# Chuyển ngày sang dd/mm/yyyy #}
+                <th>Thứ {{ day + 1 }} - {{ ('2024-11-' ~ day) | format_date('%d/%m/%Y') }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for shift in ['Sáng', 'Chiều', 'Tối'] %}
+        <tr>
+            <td>{{ shift }}</td>
+            {% for day in range(1, 8) %}
+                <td>
+                    {% if schedule_data[day][shift] %}
+                        <div class="schedule-card">
+                            <strong>{{ schedule_data[day][shift][0]['subject'] }}</strong><br>
+                            Tiết: {{ schedule_data[day][shift][0]['start_period'] }} - {{ schedule_data[day][shift][0]['end_period'] }}<br>
+                            Phòng: {{ schedule_data[day][shift][0]['room'] }}<br>
+                            GV: {{ schedule_data[day][shift][0]['teacher'] }}
+                        </div>
+                    {% else %}
+                        <div class="empty-slot">Trống</div>
+                    {% endif %}
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="button-group">
+    <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">Quay lại</a>
+    <button onclick="window.print()" class="btn btn-secondary">In lịch</button>
+</div>
+
+{% endblock %}

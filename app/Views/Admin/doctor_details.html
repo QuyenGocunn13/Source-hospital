@@ -13,46 +13,48 @@
         overflow-x: auto;
     }
 
-    /* Định dạng cho table */
     table {
         width: 100%;
-        border-collapse: collapse; /* Xóa khoảng cách giữa các cell */
-        background-color: #ffffff; /* Màu nền trắng */
+        border-collapse: collapse;
+        background-color: #ffffff;
     }
 
     th, td {
-        padding: 12px 15px; /* Thay đổi padding để dễ nhìn hơn */
+        padding: 12px 15px;
         text-align: left;
-        border-bottom: 1px solid #ddd; /* Đường kẻ cho các hàng */
+        border-bottom: 1px solid #ddd;
+        vertical-align: middle; /* Căn giữa theo chiều dọc */
     }
 
     th {
-        background-color: #333; /* Màu nền cho header */
-        color: white; /* Màu chữ cho header */
+        background-color: #333;
+        color: white;
+        text-align: center; /* Căn giữa tiêu đề */
     }
 
     tr:hover {
-        background-color: #f1f1f1; /* Màu nền khi hover */
+        background-color: #f1f1f1;
     }
 
-    /* Nút "Xem" */
     .view-btn {
         display: inline-flex;
-        align-items: center; /* Căn giữa icon và chữ */
-        padding: 6px 10px; /* Padding cho nút */
+        align-items: center;
+        justify-content: center; /* Căn giữa icon và chữ */
+        padding: 6px 10px;
         border-radius: 5px;
-        background-color: #e0e0e0; /* Màu nền cho nút Xem */
-        color: #333; /* Màu chữ cho nút Xem */
-        text-decoration: none; /* Không gạch chân */
-        transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+        background-color: #e0e0e0;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.3s;
     }
 
     .view-btn:hover {
-        background-color: #388e3c; 
+        background-color: #388e3c;
+        color: white; /* Đổi màu chữ khi hover */
     }
 
     .view-btn i {
-        margin-right: 5px; 
+        margin-right: 5px;
     }
 </style>
 
@@ -65,24 +67,28 @@
                 <th class="px-4 py-3 w-1/5">Mã Bác Sĩ</th> 
                 <th class="px-6 py-3">Tên Bác Sĩ</th>
                 <th class="px-6 py-3">Chuyên Khoa</th>
-                <th class="px-6 py-3">Thời Gian</th>
                 <th class="px-6 py-3">Hành Động</th> 
             </tr>
         </thead>
         <tbody class="text-sm text-gray-700">
-            {% for doctor in doctors %}
-            <tr class="border-b hover:bg-gray-100 transition-colors duration-200">
-                <td class="px-4 py-4 text-center">{{ doctor.doctor_id }}</td> 
-                <td class="px-6 py-4">{{ doctor.name }}</td>
-                <td class="px-6 py-4">{{ doctor.specialty }}</td>
-                <td class="px-6 py-4">{{ doctor.time_slot }}</td>
-                <td class="px-6 py-4 text-center"> 
-                    <a href="#" class="view-btn">
-                        <i class="fa-solid fa-eye"></i> 
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
+            {% if doctors|length == 0 %}
+                <tr>
+                    <td colspan="4" class="text-center py-4">Không có bác sĩ nào trong khoa này.</td>
+                </tr>
+            {% else %}
+                {% for doctor in doctors %}
+                <tr class="border-b hover:bg-gray-100 transition-colors duration-200">
+                    <td class="px-4 py-4 text-center">{{ doctor.doctor_id }}</td> 
+                    <td class="px-6 py-4">{{ doctor.name }}</td>
+                    <td class="px-6 py-4">{{ doctor.specialty_name }}</td> 
+                    <td class="px-6 py-4 text-center"> 
+                        <a href="{{ url_for('admin.doctor_schedule', doctor_id=doctor.doctor_id, room_id=room.room_id) }}" class="view-btn">
+                            <i class="fa-solid fa-eye"></i> Xem lịch
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
         </tbody>
     </table>
 </div>
