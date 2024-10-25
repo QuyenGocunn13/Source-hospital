@@ -216,7 +216,7 @@ year, month = get_month_year()
 valid_days = get_valid_days(year, month)
 
 # Chạy thuật toán GA
-ga = GeneticAlgorithm(doctors, rooms, time_slots, valid_days, population_size=150, generations=500)
+ga = GeneticAlgorithm(doctors, rooms, time_slots, valid_days, population_size=200, generations=1000)
 best_schedule = ga.run()
 
 # In kết quả

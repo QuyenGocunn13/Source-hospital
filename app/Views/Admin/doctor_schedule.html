@@ -28,7 +28,8 @@
         border-radius: 5px;
         padding: 10px;
         background-color: #e8f5e9;
-        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        color: #2e7d32;
+        font-weight: bold;
     }
 
     .empty-slot {
@@ -36,6 +37,20 @@
         font-style: italic;
     }
 
+    /* Thêm màu cho các ca */
+    .shift-morning {
+        background-color: #FFF3E0; /* Màu cam nhạt */
+    }
+
+    .shift-afternoon {
+        background-color: #E3F2FD; /* Màu xanh nhạt */
+    }
+
+    .shift-evening {
+        background-color: #EDE7F6; /* Màu tím nhạt */
+    }
+
+    /* Button */
     .button-group {
         margin-top: 20px;
         display: flex;
@@ -74,42 +89,41 @@
 <h2>Lịch làm việc của Bác Sĩ {{ doctor.name }} (Mã Bác Sĩ: {{ doctor.doctor_id }})</h2>
 <p>Phòng: {{ room.room_type }}</p>
 
-<table>
-    <thead>
-        <tr>
-            <th>Ca trực</th>
-            {% for day in range(1, 8) %}
-                {# Chuyển ngày sang dd/mm/yyyy #}
-                <th>Thứ {{ day + 1 }} - {{ ('2024-11-' ~ day) | format_date('%d/%m/%Y') }}</th>
+{% for week, days in schedule_data.items() %}
+    <h3>Tuần {{ week }}</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Ca trực</th>
+                {% for day in days.keys() %}
+                    <th>Thứ {{ day }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for shift in ['Sáng', 'Chiều', 'Tối'] %}
+            <tr>
+                <td>{{ shift }}</td>
+                {% for day, shifts in days.items() %}
+                    <td class="{% if shift == 'Sáng' %}shift-morning{% elif shift == 'Chiều' %}shift-afternoon{% else %}shift-evening{% endif %}">
+                        {% if shifts[shift] %}
+                            <div class="schedule-card">
+                                <strong>Lịch: {{ shifts[shift][0]['subject'] }}</strong><br>
+                                Phòng: {{ shifts[shift][0]['room'] }}
+                            </div>
+                        {% else %}
+                            <div class="empty-slot">Trống</div>
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for shift in ['Sáng', 'Chiều', 'Tối'] %}
-        <tr>
-            <td>{{ shift }}</td>
-            {% for day in range(1, 8) %}
-                <td>
-                    {% if schedule_data[day][shift] %}
-                        <div class="schedule-card">
-                            <strong>{{ schedule_data[day][shift][0]['subject'] }}</strong><br>
-                            Tiết: {{ schedule_data[day][shift][0]['start_period'] }} - {{ schedule_data[day][shift][0]['end_period'] }}<br>
-                            Phòng: {{ schedule_data[day][shift][0]['room'] }}<br>
-                            GV: {{ schedule_data[day][shift][0]['teacher'] }}
-                        </div>
-                    {% else %}
-                        <div class="empty-slot">Trống</div>
-                    {% endif %}
-                </td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+{% endfor %}
 
 <div class="button-group">
     <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">Quay lại</a>
     <button onclick="window.print()" class="btn btn-secondary">In lịch</button>
 </div>
-
 {% endblock %}
