@@ -82,24 +82,24 @@ def get_doctor_schedule(doctor_id, room_id):
     time_slots = read_csv(time_slots_file_path)
     schedules = read_csv(schedule_file_path)
 
-    # Tìm thông tin bác sĩ
     doctor = next((doc for doc in doctors if doc['doctor_id'] == str(doctor_id)), None)
     room = next((r for r in rooms if r['room_id'] == str(room_id)), None)
 
     if not doctor or not room:
         return None, None, None
 
-    # Tạo một dictionary để lưu lịch làm việc
-    schedule_data = {day: {'Sáng': [], 'Chiều': [], 'Tối': []} for day in range(1, 32)}  # 1 đến 31 cho các ngày trong tháng
+    # Khởi tạo schedule_data với tuần
+    schedule_data = {week: {day: {'Sáng': [], 'Chiều': [], 'Tối': []} for day in range(1, 8)} for week in range(1, 6)}
 
-    # Lấy lịch làm việc của bác sĩ từ schedule.csv
     for entry in schedules:
         if entry['doctor_id'] == str(doctor_id) and entry['room_id'] == str(room_id):
             day = int(entry['day'])
+            week = (day - 1) // 7 + 1  # Xác định tuần theo ngày trong tháng
+            day_of_week = (day - 1) % 7 + 1  # Xác định ngày trong tuần
             time_slot_id = entry['time_slot_id']
             time_slot = next((slot for slot in time_slots if slot['slot_id'] == time_slot_id), None)
             if time_slot:
-                schedule_data[day][time_slot['time_slot']].append(entry)
+                schedule_data[week][day_of_week][time_slot['time_slot']].append(entry)
 
     return doctor, room, schedule_data
 

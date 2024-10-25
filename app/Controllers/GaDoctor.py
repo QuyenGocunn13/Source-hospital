@@ -5,14 +5,16 @@ import calendar
 
 # Định nghĩa các lớp trước khi sử dụng
 class Doctor:
-    def __init__(self, doctor_id, specialty_name):
+    def __init__(self, doctor_id, specialty_name, specialty_id):
         self.id = doctor_id
         self.specialty_name = specialty_name
+        self.specialty_id = specialty_id  # Thêm specialty_id
 
 class Room:
-    def __init__(self, room_id, room_type):
+    def __init__(self, room_id, room_type, specialty_id):
         self.id = room_id
         self.type = room_type
+        self.specialty_id = specialty_id  # Thêm specialty_id
 
 class TimeSlot:
     def __init__(self, slot_id):
@@ -38,7 +40,8 @@ class CSVReader:
             for row in reader:
                 doctor_id = int(row['doctor_id'])
                 specialty_name = row['specialty_name']
-                doctors.append(Doctor(doctor_id, specialty_name))
+                specialty_id = int(row['specialty_id'])  # Đọc specialty_id
+                doctors.append(Doctor(doctor_id, specialty_name, specialty_id))
         return doctors
 
     @staticmethod
@@ -49,7 +52,8 @@ class CSVReader:
             for row in reader:
                 room_id = int(row['room_id'])
                 room_type = row['room_type']
-                rooms.append(Room(room_id, room_type))
+                specialty_id = int(row['specialty_id'])  # Đọc specialty_id
+                rooms.append(Room(room_id, room_type, specialty_id))
         return rooms
 
     @staticmethod
@@ -99,10 +103,12 @@ class GeneticAlgorithm:
     def create_individual(self):
         individual = []
         for doctor in self.doctors:
-            room = random.choice(self.rooms).id
-            time_slot = random.choice(self.time_slots)  # Lấy đối tượng TimeSlot
-            day = random.choice(self.valid_days)  # Chọn ngày hợp lệ
-            individual.append(Schedule(doctor.id, room, time_slot, day))
+            num_days_working = random.randint(2, 4)  # Số ngày làm việc ngẫu nhiên cho mỗi bác sĩ, ví dụ 2–4 ngày
+            for _ in range(num_days_working):
+                room = random.choice([room for room in self.rooms if room.specialty_id == doctor.specialty_id]).id  # Chọn phòng đúng chuyên khoa
+                time_slot = random.choice(self.time_slots)  # Lấy đối tượng TimeSlot
+                day = random.choice(self.valid_days)  # Chọn ngày hợp lệ
+                individual.append(Schedule(doctor.id, room, time_slot, day))
         return individual
 
     def create_population(self):
@@ -155,10 +161,21 @@ class GeneticAlgorithm:
     def mutate(self, individual):
         if random.random() < self.mutpb:
             idx = random.randint(0, len(individual) - 1)
-            room = random.choice(self.rooms).id
-            time_slot = random.choice(self.time_slots)  # Lấy đối tượng TimeSlot
-            day = random.choice(self.valid_days)  # Chọn ngày hợp lệ
-            individual[idx] = Schedule(individual[idx].doctor_id, room, time_slot, day)
+            
+            # Lấy specialty_id từ doctor_id của lịch
+            doctor_id = individual[idx].doctor_id
+            specialty_id = next((doctor.specialty_id for doctor in self.doctors if doctor.id == doctor_id), None)
+            
+            # Tìm các phòng phù hợp với specialty_id
+            valid_rooms = [room for room in self.rooms if room.specialty_id == specialty_id]
+            
+            if valid_rooms:  # Chỉ chọn nếu có phòng hợp lệ
+                room = random.choice(valid_rooms).id
+                time_slot = random.choice(self.time_slots)  # Lấy đối tượng TimeSlot
+                day = random.choice(self.valid_days)  # Chọn ngày hợp lệ
+                individual[idx] = Schedule(doctor_id, room, time_slot, day)
+            else:
+                print(f"No valid rooms found for doctor ID {doctor_id} with specialty ID {specialty_id}.")  # Thông báo không có phòng hợp lệ
         return individual
 
     def run(self):
