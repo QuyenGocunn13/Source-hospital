@@ -138,5 +138,6 @@ def user_schedule(week_index):
         doctor_id=doctor_id,
         doctor_name=doctor_name,
         last_week=(week_index == len(monthly_schedule) - 1),
-        first_week=(week_index == 0)
+        first_week=(week_index == 0),
+        doctor=next((doctor for doctor in doctors if int(doctor['doctor_id']) == doctor_id), None) 
     )
