@@ -8,7 +8,7 @@ auth_bp = Blueprint('auth', __name__, template_folder='../Views/Auth')
 def validate_login(username, password):
     # Xác định đường dẫn tuyệt đối tới file CSV trong folder Models
     csv_file_path = os.path.join(os.path.dirname(__file__), '../Models/user.csv')
-    
+
     with open(csv_file_path, mode='r') as file:
         csv_reader = csv.DictReader(file)
         for row in csv_reader:

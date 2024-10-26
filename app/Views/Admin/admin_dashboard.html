@@ -1,4 +1,52 @@
 {% extends "_Layoutadmin.html" %}
+
 {% block content %}
-<h1>Hello</h1>
+<div class="container mx-auto p-6">
+    <h1 class="text-4xl font-bold text-center text-blue-600 mb-6">Chào Mừng đến với Trang Quản Trị</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+        <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg p-4 shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
+            <h2 class="text-xl font-semibold">Thông Tin Tổng Quan</h2>
+            <p class="mt-2">Xem thông tin tổng quan về hệ thống.</p>
+            <img src="https://i.pinimg.com/originals/ae/e6/09/aee6093e58469b2c66072e0a05957d50.gif" alt="Overview" class="w-full h-32 object-cover rounded mt-2" />
+        </div>
+
+        <div class="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg p-4 shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
+            <h2 class="text-xl font-semibold">Dữ Liệu Thống Kê</h2>
+            <p class="mt-2">Theo dõi và phân tích dữ liệu thống kê.</p>
+            <img src="https://i.pinimg.com/originals/92/81/81/928181ff9bf2c21bc35d2cb94aee6b49.gif" alt="Statistics" class="w-full h-32 object-cover rounded mt-2" />
+        </div>
+
+        <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-lg p-4 shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
+            <h2 class="text-xl font-semibold">Cài Đặt Hệ Thống</h2>
+            <p class="mt-2">Thay đổi các cài đặt liên quan đến hệ thống.</p>
+            <img src="https://i.pinimg.com/originals/c2/9a/88/c29a88d77ddda360d5e2ec6288078cd1.gif" alt="Settings" class="w-full h-32 object-cover rounded mt-2" />
+        </div>
+
+        <div class="bg-gradient-to-r from-red-400 to-red-600 text-white rounded-lg p-4 shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
+            <h2 class="text-xl font-semibold">Hỗ Trợ Khách Hàng</h2>
+            <p class="mt-2">Nhận hỗ trợ và trợ giúp khi cần thiết.</p>
+            <img src="https://i.pinimg.com/564x/cb/77/5f/cb775f5ba4e3a3255cfc074964afb4a7.jpg" alt="Support" class="w-full h-32 object-cover rounded mt-2" />
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow-lg p-4">
+            <h3 class="text-2xl font-semibold mb-4">Thống Kê Biểu Đồ</h3>
+            <div id="chart" class="h-48 bg-gray-200 rounded-lg"></div>
+            <!-- Bạn có thể tích hợp biểu đồ sử dụng Chart.js hoặc một thư viện tương tự ở đây -->
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-4">
+            <h3 class="text-2xl font-semibold mb-4">Thông Báo Gần Đây</h3>
+            <ul class="list-disc list-inside">
+                <li class="text-gray-700">Đã thêm 5 bác sĩ mới vào hệ thống.</li>
+                <li class="text-gray-700">Cập nhật thành công thông tin người dùng.</li>
+                <li class="text-gray-700">Đã gửi thông báo nhắc lịch cho 10 bệnh nhân.</li>
+                <li class="text-gray-700">Hệ thống đã bảo trì thành công vào tối qua.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

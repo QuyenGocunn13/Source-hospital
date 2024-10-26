@@ -4,103 +4,190 @@
 <style>
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 
-    .container {
-        max-width: 800px; /* Giới hạn chiều rộng */
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f9f9f9; /* Nền sáng nhẹ */
-        border-radius: 8px; /* Bo góc */
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
-        margin-left: 20px; /* Di chuyển khung sang trái */
+    body {
+        background-color: #f4f7fa;
+        font-family: 'Arial', sans-serif;
     }
-    
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 10px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+        margin-top: 40px;
+    }
+
     .welcome-text {
-        font-size: 32px; /* Kích thước lớn cho tiêu đề chính */
-        color: #2c3e50; /* Màu sắc hài hòa */
-        text-align: center; /* Canh giữa */
-        margin-bottom: 10px;
-        font-weight: bold; /* Làm đậm tiêu đề chính */
+        font-size: 36px;
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
     }
 
     .subtitle {
-        text-align: center; /* Canh giữa */
-        font-size: 24px; /* Kích thước lớn cho phụ đề */
-        color: #34495e; /* Màu sắc hài hòa */
-        margin-bottom: 30px; /* Khoảng cách phía dưới */
+        text-align: center;
+        font-size: 28px;
+        color: #34495e;
+        margin-bottom: 40px;
     }
 
     .profile-info {
-        margin-bottom: 20px; /* Khoảng cách giữa các mục thông tin */
-        padding: 15px;
-        border: 1px solid #ddd; /* Đường viền nhẹ */
-        border-radius: 8px; /* Bo góc */
-        background-color: #ffffff; /* Nền trắng */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ cho khối thông tin */
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .profile-info:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-info img {
+        border-radius: 50%;
+        width: 80px;  /* Điều chỉnh kích thước hình ảnh */
+        height: 80px; /* Điều chỉnh kích thước hình ảnh */
+        margin-right: 20px;
+        border: 2px solid #009879;
+    }
+
+    .profile-details {
+        flex-grow: 1;
     }
 
     .profile-info h3 {
-        margin: 0; /* Bỏ margin cho tiêu đề thông tin */
-        font-size: 22px; /* Kích thước lớn cho tiêu đề thông tin */
-        color: #009879; /* Màu sắc nổi bật cho tiêu đề */
-        font-weight: bold; /* Làm đậm tiêu đề thông tin */
+        margin: 0;
+        font-size: 18px; /* Điều chỉnh kích thước tiêu đề */
+        color: #009879;
+        font-weight: bold;
     }
 
     .profile-info p {
-        margin: 5px 0; /* Khoảng cách giữa các đoạn */
-        font-size: 18px; /* Kích thước chữ lớn hơn để dễ đọc */
-        color: #34495e; /* Màu chữ */
-        display: inline; /* Hiển thị inline để kết hợp với nút */
+        margin: 5px 0;
+        font-size: 16px; /* Điều chỉnh kích thước văn bản */
+        color: #34495e;
     }
 
     .toggle-password {
-        cursor: pointer; /* Hiển thị con trỏ khi hover */
-        color: #007bff; /* Màu chữ cho icon */
-        margin-left: 10px; /* Khoảng cách giữa mật khẩu và icon */
-        font-size: 20px; /* Kích thước icon */
-        vertical-align: middle; /* Canh giữa với dòng chữ */
-        transition: color 0.3s; /* Hiệu ứng chuyển màu mượt mà */
+        cursor: pointer;
+        color: #007bff;
+        margin-left: 10px;
+        font-size: 20px;
+        vertical-align: middle;
+        transition: color 0.3s;
     }
 
     .toggle-password:hover {
-        color: #0056b3; /* Màu khi hover */
+        color: #0056b3;
+    }
+
+    /* Carousel Styles */
+    .carousel {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        margin-bottom: 40px;
+    }
+
+    .carousel-images {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+
+    .carousel-images img {
+        width: 100%; /* Giữ nguyên kích thước hình ảnh */
+        height: 400px; /* Thiết lập chiều cao cố định cho carousel */
+        object-fit: cover; /* Đảm bảo hình ảnh được cắt đúng tỉ lệ */
+    }
+
+    .carousel-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(255, 255, 255, 0.7);
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 24px;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .carousel-button.left {
+        left: 10px;
+    }
+
+    .carousel-button.right {
+        right: 10px;
     }
 </style>
 
+<h1 class="welcome-text">Xin chào, {{ username }}!</h1>
+
 <div class="container">
-    <h1 class="welcome-text">Welcome, {{ username }}!</h1>
-    <h2 class="subtitle">Doctor Profiles</h2>
+    <h2 class="subtitle">Thông tin cá nhân</h2>
 
     {% for doctor in doctors %}
     <div class="profile-info">
-        <h3>Doctor ID:</h3>
-        <p>{{ doctor.doctor_id }}</p>
-        <h3>Name:</h3>
-        <p>{{ doctor.name }}</p>
-        <h3>Specialty:</h3>
-        <p>{{ doctor.specialty }}</p>
-        <h3>Username:</h3>
-        <p>{{ doctor.username }}</p>
-        <h3>Password:</h3>
-        <p id="password-{{ doctor.doctor_id }}" style="display: none;">{{ doctor.password }}</p>
-        <span class="toggle-password" onclick="togglePassword('{{ doctor.doctor_id }}')">
-            <i class="fas fa-eye"></i>
-        </span>
+        <img src="https://image.pngaaa.com/321/1856321-middle.png" alt="Avatar of {{ doctor.name }}">
+        <div class="profile-details">
+            <h3>ID Bác sĩ:</h3>
+            <p>{{ doctor.doctor_id }}</p>
+            <h3>Họ và tên:</h3>
+            <p>{{ doctor.name }}</p>
+            <h3>Chuyên khoa:</h3>
+            <p>{{ doctor.specialty_name }}</p>
+            <h3>Tài khoản:</h3>
+            <p>{{ doctor.username }}</p>
+            <h3>Mật khẩu:</h3>
+            <p id="password-{{ doctor.doctor_id }}" style="display: none;">{{ doctor.password }}</p>
+            <span class="toggle-password" onclick="togglePassword('{{ doctor.doctor_id }}')">
+                <i class="fas fa-eye"></i>
+            </span>
+        </div>
     </div>
     {% endfor %}
 </div>
 
 <script>
+    let currentIndex = 0;
+
+    function showImage(index) {
+        const images = document.getElementById('carousel-images');
+        images.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    function nextImage() {
+        const images = document.querySelectorAll('.carousel-images img');
+        currentIndex = (currentIndex + 1) % images.length;
+        showImage(currentIndex);
+    }
+
+    function prevImage() {
+        const images = document.querySelectorAll('.carousel-images img');
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        showImage(currentIndex);
+    }
+
     function togglePassword(doctorId) {
         const passwordField = document.getElementById(`password-${doctorId}`);
         const toggleButton = document.querySelector(`.toggle-password[onclick*='${doctorId}'] i`);
 
         if (passwordField.style.display === "none") {
-            passwordField.style.display = "inline"; // Hiển thị mật khẩu
-            toggleButton.classList.remove('fa-eye'); // Đổi icon thành dấu gạch chéo
+            passwordField.style.display = "inline"; 
+            toggleButton.classList.remove('fa-eye');
             toggleButton.classList.add('fa-eye-slash');
         } else {
-            passwordField.style.display = "none"; // Ẩn mật khẩu
-            toggleButton.classList.remove('fa-eye-slash'); // Đổi icon về dấu mắt
+            passwordField.style.display = "none";
+            toggleButton.classList.remove('fa-eye-slash');
             toggleButton.classList.add('fa-eye');
         }
     }

@@ -1,171 +1,52 @@
-{% extends "_Layoutuser.html" %}
+{% extends "_Layoutadmin.html" %}
 
 {% block content %}
-<style>
-    .date-box {
-        border-radius: 8px;
-        background-color: #F0F8FF;
-        text-align: center;
-    }
+<h2 class="text-2xl font-semibold mb-4">Lịch Trình Tuần của Bác Sĩ: {{ doctor_name }}</h2>
+<p>Tuần: {{ week_index + 1 }} / Tháng {{ month }} - {{ year }}</p>
 
-    .current-day,
-    .selected-day {
-        background-color: #a7a7a9;
-        color: white;
-    }
-    .none{
-        display: none;
-    }
-
-    .calendar-day {
-        cursor: pointer;
-    }
-</style>
-
-<div class="date-box">
-    <input type="date" id="dateInput" class="mt-4 p-2 m-2 border rounded" />
-    <p id="selectedDate" class="text-xl mt-4 none "></p>
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+        <thead>
+            <tr>
+                <th class="px-4 py-2 bg-gray-800 text-white">Ca Trực</th>
+                {% for i in range(7) %}
+                    <th class="px-4 py-2 bg-gray-800 text-white">Thứ {{ i + 2 if i < 6 else 'CN' }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for time_slot, days in weekly_schedule.items() %}
+                <tr class="border-b hover:bg-gray-100">
+                    <td class="px-4 py-2 font-medium">{{ time_slot }}</td>
+                    {% for day in days %}
+                        <td class="px-4 py-2">
+                            {% if day %}
+                                <p>{{ day.date }}</p>
+                                <p>Phòng: {{ day.room_type }}</p>
+                            {% else %}
+                            
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
-<div class="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
-    <div class="flex justify-between border-b border-gray-300 bg-gray-200 p-2">
-        <button id="prevMonth" class="px-2">Trước</button>
-        <h3 id="monthYear" class="font-bold"></h3>
-        <button id="nextMonth" class="px-2">Sau</button>
+<div class="mt-4">
+    <div class="nav-buttons">
+        {% if not first_week %}
+            <a href="{{ url_for('user.user_schedule', doctor_id=doctor_id, week_index=week_index - 1, year=year, month=month) }}" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500 transition duration-200">← Tuần Trước</a>
+        {% else %}
+            <span class="text-gray-500 py-2 px-4 rounded">← Tuần Trước</span>
+        {% endif %}
+        
+        {% if not last_week %}
+            <a href="{{ url_for('user.user_schedule', doctor_id=doctor_id, week_index=week_index + 1, year=year, month=month) }}" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500 transition duration-200">Tuần Tiếp Theo →</a>
+        {% else %}
+            <span class="text-gray-500 py-2 px-4 rounded">Tuần Tiếp Theo →</span>
+        {% endif %}
     </div>
-    <div
-        class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none">
-        <div class="flex justify-center bg-white py-2"><span>M</span><span class="sr-only sm:not-sr-only">on</span>
-        </div>
-        <div class="flex justify-center bg-white py-2"><span>T</span><span class="sr-only sm:not-sr-only">ue</span>
-        </div>
-        <div class="flex justify-center bg-white py-2"><span>W</span><span class="sr-only sm:not-sr-only">ed</span>
-        </div>
-        <div class="flex justify-center bg-white py-2"><span>T</span><span class="sr-only sm:not-sr-only">hu</span>
-        </div>
-        <div class="flex justify-center bg-white py-2"><span>F</span><span class="sr-only sm:not-sr-only">ri</span>
-        </div>
-        <div class="flex justify-center bg-white py-2"><span>S</span><span class="sr-only sm:not-sr-only">at</span>
-        </div>
-        <div class="flex justify-center bg-white py-2"><span>S</span><span class="sr-only sm:not-sr-only">un</span>
-        </div>
-    </div>
-    <div class="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
-        <div id="calendar" class="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px"></div>
-    </div>
-
-    <script>
-        const events = [
-            {
-                date: '2024-10-24',
-                title: 'Trực Ca Sáng',
-                room: 'A308',
-                time: '6:00 - 10:00 AM'
-            },
-            {
-                date: '2024-10-22',
-                title: 'Trực Ca Tối',
-                room: 'A309',
-                time: '12:00 - 18:00 PM'
-            }
-        ];
-        const dateInput = document.getElementById('dateInput');
-        const selectedDateDisplay = document.getElementById('selectedDate');
-        const calendar = document.getElementById('calendar');
-        const monthYearDisplay = document.getElementById('monthYear');
-        const prevMonthButton = document.getElementById('prevMonth');
-        const nextMonthButton = document.getElementById('nextMonth');
-
-        let currentDate = new Date();
-        let selectedDate = new Date(currentDate);
-
-        function setCurrentDate() {
-            dateInput.value = currentDate.toISOString().split('T')[0];
-            updateSelectedDate(currentDate);
-        }
-
-        function updateSelectedDate(date) {
-            selectedDate = date;
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            selectedDateDisplay.innerText = date.toLocaleDateString('vi-VN', options);
-        }
-
-
-
-        function createCalendar() {
-            const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-            const totalDays = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-
-
-            monthYearDisplay.innerText = `${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-
-            calendar.innerHTML = '';
-
-            for (let i = 1; i <= totalDays; i++) {
-                const day = new Date(date.getFullYear(), date.getMonth(), i);
-                const dayElement = document.createElement('div');
-                dayElement.classList.add('relative', 'bg-gray-50', 'px-3', 'py-4', 'text-gray-500', 'calendar-day');
-
-                if (day.toDateString() === currentDate.toDateString()) {
-                    dayElement.classList.add('current-day');
-                }
-
-                if (selectedDate && day.toDateString() === selectedDate.toDateString()) {
-                    dayElement.classList.add('selected-day');
-                }
-
-                dayElement.innerHTML = `<time datetime="${day.toISOString().split('T')[0]}">${i}</time>`;
-
-                const event = events.find(e => e.date === day.toISOString().split('T')[0]);
-                if (event) {
-                    const eventElement = document.createElement('div');
-                    eventElement.classList.add('text-sm', 'text-indigo-600', 'mt-1');
-                    eventElement.innerHTML = `${event.title}<br>${event.room}<br>${event.time}`; // Thêm thẻ <br> để xuống dòng
-                    dayElement.appendChild(eventElement);
-                }
-
-                calendar.appendChild(dayElement);
-
-
-                dayElement.addEventListener('click', () => {
-                    if (day.toDateString() === (selectedDate ? selectedDate.toDateString() : '')) {
-
-                        selectedDate = null;
-                        dateInput.value = '';
-                    } else {
-
-                        updateSelectedDate(day);
-                        dateInput.value = day.toISOString().split('T')[0];
-                    }
-                    createCalendar();
-                });
-            }
-        }
-
-
-        prevMonthButton.addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            createCalendar();
-        });
-
-        nextMonthButton.addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            createCalendar();
-        });
-
-        dateInput.addEventListener('input', function () {
-            const selectedDateFromInput = new Date(this.value);
-            if (!isNaN(selectedDateFromInput.getTime())) {
-                currentDate = selectedDateFromInput;
-                createCalendar();
-                updateSelectedDate(selectedDateFromInput);
-            }
-        });
-
-        window.onload = () => {
-            setCurrentDate();
-            createCalendar();
-        };
-    </script>
 </div>
 {% endblock %}

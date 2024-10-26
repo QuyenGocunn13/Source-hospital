@@ -166,7 +166,7 @@
                     <i class="mr-3 fa-solid fa-user"></i><a href="{{ url_for('user.user') }}">Hồ Sơ</a>
                 </div>
                 <div>
-                    <i class="mr-3 fa-solid fa-calendar"></i><a href="{{ url_for('user.schedule') }}">Lịch làm việc</a>
+                    <i class="mr-3 fa-solid fa-calendar"></i><a href="{{ url_for('user.user_schedule', doctor_id=doctor.doctor_id, week_index=0, year=current_year, month=current_month) }}">Lịch làm việc</a>
                 </div>                
                 <div>
                     <i class="mr-3 fa-solid fa-hospital"></i><a href="">Thông Báo</a>

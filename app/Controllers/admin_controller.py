@@ -1,46 +1,11 @@
 from flask import Blueprint, render_template, request
 from datetime import datetime, timedelta
+from .ReadCSV import read_rooms_from_csv, read_doctors_from_csv, read_time_slots_from_csv, read_specialties_from_csv, read_schedule_from_csv
 import csv
 import os
 
 # Khởi tạo Blueprint cho admin
 admin_bp = Blueprint('admin', __name__, template_folder='../Views/admin')
-
-# Định nghĩa hàm để đọc file CSV
-def read_csv(file_path):
-    data = []
-    try:
-        with open(file_path, newline='', encoding='utf-8') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                data.append(row)
-    except FileNotFoundError:
-        print(f"File {file_path} không tồn tại.")
-    return data
-
-def read_rooms_from_csv(file_path):
-    rooms = read_csv(file_path)
-    return [
-        {'room_id': row['room_id'], 'room_type': row['room_type'], 'specialty_id': row['specialty_id']}
-        for row in rooms
-    ]
-
-def read_doctors_from_csv(file_path):
-    doctors = read_csv(file_path)
-    return [
-        {'doctor_id': row['doctor_id'], 'name': row['name'], 'specialty_name': row['specialty_name'], 'user_id': row['user_id']}
-        for row in doctors
-    ]
-
-def read_time_slots_from_csv(file_path):
-    return read_csv(file_path)
-
-def read_specialties_from_csv(file_path):
-    specialties = read_csv(file_path)
-    return {row['specialty_id']: row['specialty_name'] for row in specialties}
-
-def read_schedule_from_csv(file_path):
-    return read_csv(file_path)
 
 # Hàm lấy danh sách bác sĩ theo room_id
 def get_all_doctors(room_id):
@@ -79,12 +44,23 @@ def get_week_starts(year, month):
 
 # Hàm lấy lịch của bác sĩ theo tháng
 def get_monthly_schedule(doctor_id, year, month):
+    # Đường dẫn đến file chứa lịch trình
     schedule_file_path = os.path.join(os.path.dirname(__file__), '../Models/schedule.csv')
     schedule_data = read_schedule_from_csv(schedule_file_path)
 
-    # Xác định tuần bắt đầu trong tháng
+    # Xác định ngày bắt đầu của từng tuần trong tháng
     week_starts = get_week_starts(year, month)
-    weekly_schedule = [{"Sáng": [], "Chiều": [], "Tối": []} for _ in range(4)]  # Giả định có 4 tuần
+    weekly_schedule = [{"Sáng": [None] * 7, "Chiều": [None] * 7, "Tối": [None] * 7} for _ in range(4)]
+
+    # Đọc các tệp CSV cho room và time slot
+    room_file_path = os.path.join(os.path.dirname(__file__), '../Models/rooms.csv')
+    time_slot_file_path = os.path.join(os.path.dirname(__file__), '../Models/time_slots.csv')
+    rooms = read_rooms_from_csv(room_file_path)
+    time_slots = read_time_slots_from_csv(time_slot_file_path)
+
+    # Tạo từ điển để tìm room và time slot nhanh hơn
+    room_dict = {room['room_id']: room for room in rooms}
+    time_slot_dict = {slot['slot_id']: slot for slot in time_slots}
 
     # Lọc lịch của bác sĩ theo doctor_id, month, và year
     filtered_schedule = [
@@ -103,21 +79,21 @@ def get_monthly_schedule(doctor_id, year, month):
                 time_slot_id = row['time_slot_id']
                 room_id = row['room_id']
 
-                # Đọc thông tin phòng và ca trực từ các file
-                room_file_path = os.path.join(os.path.dirname(__file__), '../Models/rooms.csv')
-                time_slot_file_path = os.path.join(os.path.dirname(__file__), '../Models/time_slots.csv')
-                rooms = read_rooms_from_csv(room_file_path)
-                time_slots = read_time_slots_from_csv(time_slot_file_path)
-
                 # Tìm thông tin phòng và ca trực tương ứng
-                room_info = next((room for room in rooms if room['room_id'] == room_id), None)
-                time_slot_info = next((slot for slot in time_slots if slot['slot_id'] == time_slot_id), None)
+                room_info = room_dict.get(room_id, {"room_type": "Unknown"})
+                time_slot_info = time_slot_dict.get(time_slot_id, {"time_slot": "Unknown"})
 
-                time_slot_name = time_slot_info['time_slot'] if time_slot_info else "Unknown"
-                weekly_schedule[i][time_slot_name].append({
+                # Tên ca trực (Sáng, Chiều, Tối) dựa trên `time_slot`
+                time_slot_name = time_slot_info['time_slot']
+
+                # Xác định thứ trong tuần
+                column_index = (date.weekday()) % 7  # Thứ Hai = 0, ..., Chủ Nhật = 6
+
+                # Đảm bảo dữ liệu vào đúng ô trong bảng
+                weekly_schedule[i][time_slot_name][column_index] = {
                     "date": date.strftime("%d/%m/%Y"),
-                    "room_type": room_info['room_type'] if room_info else "Unknown"
-                })
+                    "room_type": room_info['room_type']
+                }
 
     return weekly_schedule
 
