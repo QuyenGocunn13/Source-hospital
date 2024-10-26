@@ -35,4 +35,10 @@ def read_specialties_from_csv(file_path):
     return {row['specialty_id']: row['specialty_name'] for row in specialties}
 
 def read_schedule_from_csv(file_path):
-    return read_csv(file_path)
+    schedule_data = read_csv(file_path)
+    # Chuyển đổi year và month thành int
+    for row in schedule_data:
+        row['year'] = int(row['year'])  
+        row['month'] = int(row['month'])  
+        row['day'] = int(row['day'])  
+    return schedule_data

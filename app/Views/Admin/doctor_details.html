@@ -74,7 +74,7 @@
                     <td class="px-6 py-4">{{ doctor.name }}</td>
                     <td class="px-6 py-4">{{ doctor.specialty_name }}</td> 
                     <td class="px-6 py-4 text-center"> 
-                        <a href="{{ url_for('admin.doctor_weekly_schedule', doctor_id=doctor.doctor_id, week_index=0, year=datetime.now().year, month=datetime.now().month) }}" class="view-btn">
+                        <a href="{{ url_for('admin.doctor_weekly_schedule', doctor_id=doctor.doctor_id, week_index=0, year=year, month=month) }}" class="view-btn">
                             <i class="fa-solid fa-eye"></i> 
                         </a>
                     </td>

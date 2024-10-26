@@ -120,9 +120,21 @@ def doctors_by_room(room_id):
 # Trang lịch trình của bác sĩ theo tuần
 @admin_bp.route('/doctor_schedule/<int:doctor_id>/month/<int:week_index>')
 def doctor_weekly_schedule(doctor_id, week_index):
-    # Lấy năm và tháng từ query parameters, mặc định là năm và tháng hiện tại
-    year = request.args.get('year', datetime.today().year, type=int)
-    month = request.args.get('month', datetime.today().month, type=int)
+    # Đường dẫn đến file chứa lịch trình
+    schedule_file_path = os.path.join(os.path.dirname(__file__), '../Models/schedule.csv')
+    schedule_data = read_schedule_from_csv(schedule_file_path)
+
+    # Lọc thông tin tháng và năm cho bác sĩ cụ thể
+    filtered_data = [row for row in schedule_data if int(row['doctor_id']) == doctor_id]
+
+    # Kiểm tra xem có dữ liệu cho bác sĩ này không
+    if not filtered_data:
+        # Nếu không có, bạn có thể trả về thông báo hoặc giá trị mặc định
+        return "Không tìm thấy lịch trình cho bác sĩ này.", 404
+
+    # Lấy tháng và năm từ dữ liệu đã lọc
+    year = filtered_data[0]['year']  # Lấy năm từ bản ghi đầu tiên
+    month = filtered_data[0]['month']  # Lấy tháng từ bản ghi đầu tiên
 
     # Lấy lịch theo tháng chia theo tuần
     monthly_schedule = get_monthly_schedule(doctor_id, year, month)
