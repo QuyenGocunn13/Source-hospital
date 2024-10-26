@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
+from datetime import datetime, timedelta
 import csv
 import os
 
@@ -45,10 +46,8 @@ def read_schedule_from_csv(file_path):
 def get_all_doctors(room_id):
     doctors_file_path = os.path.join(os.path.dirname(__file__), '../Models/doctors.csv')
     doctors = read_doctors_from_csv(doctors_file_path)
-
     room_file_path = os.path.join(os.path.dirname(__file__), '../Models/rooms.csv')
     rooms = read_rooms_from_csv(room_file_path)
-
     specialties_file_path = os.path.join(os.path.dirname(__file__), '../Models/specialtys.csv')
     specialties = read_specialties_from_csv(specialties_file_path)
 
@@ -69,39 +68,58 @@ def get_room_by_id(room_id):
     rooms = read_rooms_from_csv(csv_file_path)
     return next((room for room in rooms if room['room_id'] == str(room_id)), None)
 
-# Hàm để lấy lịch làm việc của bác sĩ theo doctor_id
-def get_doctor_schedule(doctor_id, room_id):
-    # Đọc tất cả các file CSV
-    doctors_file_path = os.path.join(os.path.dirname(__file__), '../Models/doctors.csv')
-    rooms_file_path = os.path.join(os.path.dirname(__file__), '../Models/rooms.csv')
-    time_slots_file_path = os.path.join(os.path.dirname(__file__), '../Models/time_slots.csv')
+# Hàm lấy lịch hàng tháng chia theo 4 tuần
+def get_week_starts(year, month):
+    # Ngày đầu tiên của tháng
+    first_day = datetime(year, month, 1)
+    # Tìm ngày bắt đầu của tuần chứa ngày đầu tiên của tháng
+    first_week_start = first_day - timedelta(days=first_day.weekday())
+    # Tạo danh sách ngày bắt đầu của 4 tuần trong tháng
+    return [first_week_start + timedelta(weeks=i) for i in range(4)]
+
+# Hàm lấy lịch của bác sĩ theo tháng
+def get_monthly_schedule(doctor_id, year, month):
     schedule_file_path = os.path.join(os.path.dirname(__file__), '../Models/schedule.csv')
+    schedule_data = read_schedule_from_csv(schedule_file_path)
 
-    doctors = read_doctors_from_csv(doctors_file_path)
-    rooms = read_rooms_from_csv(rooms_file_path)
-    time_slots = read_csv(time_slots_file_path)
-    schedules = read_csv(schedule_file_path)
+    # Xác định tuần bắt đầu trong tháng
+    week_starts = get_week_starts(year, month)
+    weekly_schedule = [{"Sáng": [], "Chiều": [], "Tối": []} for _ in range(4)]  # Giả định có 4 tuần
 
-    doctor = next((doc for doc in doctors if doc['doctor_id'] == str(doctor_id)), None)
-    room = next((r for r in rooms if r['room_id'] == str(room_id)), None)
+    # Lọc lịch của bác sĩ theo doctor_id, month, và year
+    filtered_schedule = [
+        row for row in schedule_data 
+        if int(row['doctor_id']) == doctor_id and int(row['year']) == year and int(row['month']) == month
+    ]
 
-    if not doctor or not room:
-        return None, None, None
+    # Duyệt qua từng bản ghi trong lịch đã lọc
+    for row in filtered_schedule:
+        day = int(row['day'])
+        date = datetime(year, month, day)
 
-    # Khởi tạo schedule_data với tuần
-    schedule_data = {week: {day: {'Sáng': [], 'Chiều': [], 'Tối': []} for day in range(1, 8)} for week in range(1, 6)}
+        # Kiểm tra tuần nào mà ngày đó nằm trong
+        for i, week_start in enumerate(week_starts):
+            if week_start <= date < week_start + timedelta(days=7):
+                time_slot_id = row['time_slot_id']
+                room_id = row['room_id']
 
-    for entry in schedules:
-        if entry['doctor_id'] == str(doctor_id) and entry['room_id'] == str(room_id):
-            day = int(entry['day'])
-            week = (day - 1) // 7 + 1  # Xác định tuần theo ngày trong tháng
-            day_of_week = (day - 1) % 7 + 1  # Xác định ngày trong tuần
-            time_slot_id = entry['time_slot_id']
-            time_slot = next((slot for slot in time_slots if slot['slot_id'] == time_slot_id), None)
-            if time_slot:
-                schedule_data[week][day_of_week][time_slot['time_slot']].append(entry)
+                # Đọc thông tin phòng và ca trực từ các file
+                room_file_path = os.path.join(os.path.dirname(__file__), '../Models/rooms.csv')
+                time_slot_file_path = os.path.join(os.path.dirname(__file__), '../Models/time_slots.csv')
+                rooms = read_rooms_from_csv(room_file_path)
+                time_slots = read_time_slots_from_csv(time_slot_file_path)
 
-    return doctor, room, schedule_data
+                # Tìm thông tin phòng và ca trực tương ứng
+                room_info = next((room for room in rooms if room['room_id'] == room_id), None)
+                time_slot_info = next((slot for slot in time_slots if slot['slot_id'] == time_slot_id), None)
+
+                time_slot_name = time_slot_info['time_slot'] if time_slot_info else "Unknown"
+                weekly_schedule[i][time_slot_name].append({
+                    "date": date.strftime("%d/%m/%Y"),
+                    "room_type": room_info['room_type'] if room_info else "Unknown"
+                })
+
+    return weekly_schedule
 
 # Trang Dashboard của Admin
 @admin_bp.route('/')
@@ -120,14 +138,38 @@ def manage_users():
 def doctors_by_room(room_id):
     doctors_in_room = get_all_doctors(room_id)
     room = get_room_by_id(room_id)
-    return render_template('doctor_details.html', room=room, doctors=doctors_in_room)
+    # Truyền thêm datetime vào template để sử dụng trong Jinja2
+    return render_template('doctor_details.html', room=room, doctors=doctors_in_room, datetime=datetime)
 
-# Trang lịch bác sĩ
-@admin_bp.route('/doctor_schedule/<int:doctor_id>/<int:room_id>')
-def doctor_schedule(doctor_id, room_id):
-    doctor, room, schedule_data = get_doctor_schedule(doctor_id, room_id)
+# Trang lịch trình của bác sĩ theo tuần
+@admin_bp.route('/doctor_schedule/<int:doctor_id>/month/<int:week_index>')
+def doctor_weekly_schedule(doctor_id, week_index):
+    # Lấy năm và tháng từ query parameters, mặc định là năm và tháng hiện tại
+    year = request.args.get('year', datetime.today().year, type=int)
+    month = request.args.get('month', datetime.today().month, type=int)
 
-    if not doctor:
-        return "Không tìm thấy thông tin bác sĩ", 404
+    # Lấy lịch theo tháng chia theo tuần
+    monthly_schedule = get_monthly_schedule(doctor_id, year, month)
 
-    return render_template('doctor_schedule.html', doctor=doctor, room=room, schedule_data=schedule_data)
+    # Kiểm tra tuần hợp lệ
+    if week_index < 0 or week_index >= len(monthly_schedule):
+        week_index = 0  # Mặc định về tuần đầu tiên nếu chỉ số ngoài phạm vi
+
+    weekly_schedule = monthly_schedule[week_index]
+
+    # Đọc danh sách bác sĩ để tìm tên bác sĩ
+    doctors_file_path = os.path.join(os.path.dirname(__file__), '../Models/doctors.csv')
+    doctors = read_doctors_from_csv(doctors_file_path)
+    doctor_name = next((doctor['name'] for doctor in doctors if int(doctor['doctor_id']) == doctor_id), "Unknown Doctor")
+
+    return render_template(
+        'doctor_schedule.html',
+        weekly_schedule=weekly_schedule,
+        year=year,
+        month=month,
+        week_index=week_index,
+        doctor_id=doctor_id,
+        doctor_name=doctor_name,
+        last_week=(week_index == len(monthly_schedule) - 1),
+        first_week=(week_index == 0)
+    )

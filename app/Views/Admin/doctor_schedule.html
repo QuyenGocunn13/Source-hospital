@@ -1,129 +1,52 @@
 {% extends "_Layoutadmin.html" %}
 
 {% block content %}
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
+<h2 class="text-2xl font-semibold mb-4">Lịch Trình Tuần của Bác Sĩ: {{ doctor_name }}</h2>
+<p>Tuần: {{ week_index + 1 }} / Tháng {{ month }} - {{ year }}</p>
 
-    th, td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: center;
-    }
-
-    th {
-        background-color: #4CAF50;
-        color: white;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    .schedule-card {
-        border: 1px solid #4CAF50;
-        border-radius: 5px;
-        padding: 10px;
-        background-color: #e8f5e9;
-        color: #2e7d32;
-        font-weight: bold;
-    }
-
-    .empty-slot {
-        color: #bbb;
-        font-style: italic;
-    }
-
-    /* Thêm màu cho các ca */
-    .shift-morning {
-        background-color: #FFF3E0; /* Màu cam nhạt */
-    }
-
-    .shift-afternoon {
-        background-color: #E3F2FD; /* Màu xanh nhạt */
-    }
-
-    .shift-evening {
-        background-color: #EDE7F6; /* Màu tím nhạt */
-    }
-
-    /* Button */
-    .button-group {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .btn {
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .btn-primary {
-        background-color: #4CAF50;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background-color: #45a049;
-    }
-
-    .btn-secondary {
-        background-color: #008CBA;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background-color: #007bb5;
-    }
-</style>
-
-<h2>Lịch làm việc của Bác Sĩ {{ doctor.name }} (Mã Bác Sĩ: {{ doctor.doctor_id }})</h2>
-<p>Phòng: {{ room.room_type }}</p>
-
-{% for week, days in schedule_data.items() %}
-    <h3>Tuần {{ week }}</h3>
-    <table>
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
         <thead>
             <tr>
-                <th>Ca trực</th>
-                {% for day in days.keys() %}
-                    <th>Thứ {{ day }}</th>
+                <th class="px-4 py-2 bg-gray-800 text-white">Ca Trực</th>
+                {% for i in range(7) %}
+                    <th class="px-4 py-2 bg-gray-800 text-white">Thứ {{ i + 2 if i < 6 else 'CN' }}</th>
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
-            {% for shift in ['Sáng', 'Chiều', 'Tối'] %}
-            <tr>
-                <td>{{ shift }}</td>
-                {% for day, shifts in days.items() %}
-                    <td class="{% if shift == 'Sáng' %}shift-morning{% elif shift == 'Chiều' %}shift-afternoon{% else %}shift-evening{% endif %}">
-                        {% if shifts[shift] %}
-                            <div class="schedule-card">
-                                <strong>Lịch: {{ shifts[shift][0]['subject'] }}</strong><br>
-                                Phòng: {{ shifts[shift][0]['room'] }}
-                            </div>
-                        {% else %}
-                            <div class="empty-slot">Trống</div>
-                        {% endif %}
-                    </td>
-                {% endfor %}
-            </tr>
+            {% for time_slot, days in weekly_schedule.items() %}
+                <tr class="border-b hover:bg-gray-100">
+                    <td class="px-4 py-2 font-medium">{{ time_slot }}</td>
+                    {% for day in days %}
+                        <td class="px-4 py-2">
+                            {% if day %}
+                                <p>{{ day.date }}</p>
+                                <p>Phòng: {{ day.room_type }}</p>
+                            {% else %}
+                                Không có lịch
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
         </tbody>
     </table>
-{% endfor %}
+</div>
 
-<div class="button-group">
-    <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">Quay lại</a>
-    <button onclick="window.print()" class="btn btn-secondary">In lịch</button>
+<div class="mt-4">
+    <div class="nav-buttons">
+        {% if not first_week %}
+            <a href="{{ url_for('admin.doctor_weekly_schedule', doctor_id=doctor_id, week_index=week_index - 1, year=year, month=month) }}" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500 transition duration-200">← Tuần Trước</a>
+        {% else %}
+            <span class="text-gray-500 py-2 px-4 rounded">← Tuần Trước</span>
+        {% endif %}
+        
+        {% if not last_week %}
+            <a href="{{ url_for('admin.doctor_weekly_schedule', doctor_id=doctor_id, week_index=week_index + 1, year=year, month=month) }}" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500 transition duration-200">Tuần Tiếp Theo →</a>
+        {% else %}
+            <span class="text-gray-500 py-2 px-4 rounded">Tuần Tiếp Theo →</span>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

@@ -1,31 +1,31 @@
 doctor_id,name,specialty_name,user_id,specialty_id
-1,Bác sĩ 1,Khoa Nội tổng hợp,2,3
-2,Bác sĩ 2,Khoa Nội tổng hợp,3,3
-3,Bác sĩ 3,Khoa Nội tổng hợp,4,3
-4,Bác sĩ 4,Khoa Da Liễu,5,10
-5,Bác sĩ 5,Khoa Da Liễu,6,10
-6,Bác sĩ 6,Khoa Da Liễu,7,10
-7,Bác sĩ 7,Khoa Nội tiết,8,8
-8,Bác sĩ 8,Khoa Nội tiết,9,8
-9,Bác sĩ 9,Khoa Nội tiết,10,8
-10,Bác sĩ 10,Khoa Nội cơ xương khớp,11,6
-11,Bác sĩ 11,Khoa Nội cơ xương khớp,12,6
-12,Bác sĩ 12,Khoa Nội cơ xương khớp,13,6
-13,Bác sĩ 13,Khoa Nội thận,14,7
-14,Bác sĩ 14,Khoa Nội thận,15,7
-15,Bác sĩ 15,Khoa Nội thận,16,7
-16,Bác sĩ 16,Khoa Hồi sức cấp cứu,17,2
-17,Bác sĩ 17,Khoa Hồi sức cấp cứu,18,2
-18,Bác sĩ 18,Khoa Hồi sức cấp cứu,19,2
-19,Bác sĩ 19,Khoa Dị ứng,20,9
-20,Bác sĩ 20,Khoa Dị ứng,21,9
-21,Bác sĩ 21,Khoa Dị ứng,22,9
-22,Bác sĩ 22,Khoa Nội tiêu hóa,23,5
-23,Bác sĩ 23,Khoa Nội tiêu hóa,24,5
-24,Bác sĩ 24,Khoa Nội tiêu hóa,25,5
-25,Bác sĩ 25,Khoa khám bệnh,26,1
-26,Bác sĩ 26,Khoa khám bệnh,27,1
-27,Bác sĩ 27,Khoa khám bệnh,28,1
-28,Bác sĩ 28,Khoa Nội tim mạch,29,4
-29,Bác sĩ 29,Khoa Nội tim mạch,30,4
-30,Bác sĩ 30,Khoa Nội tim mạch,31,4
+1,Nguyễn Văn A,Khoa Nội tổng hợp,2,3
+2,Trần Thị B,Khoa Nội tổng hợp,3,3
+3,Lê Văn C,Khoa Nội tổng hợp,4,3
+4,Phạm Thị D,Khoa Da Liễu,5,10
+5,Vũ Văn E,Khoa Da Liễu,6,10
+6,Đỗ Thị F,Khoa Da Liễu,7,10
+7,Nguyễn Văn G,Khoa Nội tiết,8,8
+8,Trần Thị H,Khoa Nội tiết,9,8
+9,Lê Văn I,Khoa Nội tiết,10,8
+10,Phạm Thị J,Khoa Nội cơ xương khớp,11,6
+11,Vũ Văn K,Khoa Nội cơ xương khớp,12,6
+12,Đỗ Thị L,Khoa Nội cơ xương khớp,13,6
+13,Nguyễn Văn M,Khoa Nội thận,14,7
+14,Trần Thị N,Khoa Nội thận,15,7
+15,Lê Văn O,Khoa Nội thận,16,7
+16,Phạm Thị P,Khoa Hồi sức cấp cứu,17,2
+17,Vũ Văn Q,Khoa Hồi sức cấp cứu,18,2
+18,Đỗ Thị R,Khoa Hồi sức cấp cứu,19,2
+19,Nguyễn Văn S,Khoa Dị ứng,20,9
+20,Trần Thị T,Khoa Dị ứng,21,9
+21,Lê Văn U,Khoa Dị ứng,22,9
+22,Phạm Thị V,Khoa Nội tiêu hóa,23,5
+23,Vũ Văn W,Khoa Nội tiêu hóa,24,5
+24,Đỗ Thị X,Khoa Nội tiêu hóa,25,5
+25,Nguyễn Văn Y,Khoa khám bệnh,26,1
+26,Trần Thị Z,Khoa khám bệnh,27,1
+27,Lê Văn Á,Khoa khám bệnh,28,1
+28,Phạm Thị Â,Khoa Nội tim mạch,29,4
+29,Vũ Văn B,Khoa Nội tim mạch,30,4
+30,Đỗ Thị C,Khoa Nội tim mạch,31,4

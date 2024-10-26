@@ -8,38 +8,32 @@
         gap: 20px;
         padding: 20px;
     }
-
     .table-wrapper {
         overflow-x: auto;
     }
-
     table {
         width: 100%;
         border-collapse: collapse;
         background-color: #ffffff;
     }
-
     th, td {
         padding: 12px 15px;
         text-align: left;
         border-bottom: 1px solid #ddd;
-        vertical-align: middle; /* Căn giữa theo chiều dọc */
+        vertical-align: middle;
     }
-
     th {
         background-color: #333;
         color: white;
-        text-align: center; /* Căn giữa tiêu đề */
+        text-align: center;
     }
-
     tr:hover {
         background-color: #f1f1f1;
     }
-
     .view-btn {
         display: inline-flex;
         align-items: center;
-        justify-content: center; /* Căn giữa icon và chữ */
+        justify-content: center;
         padding: 6px 10px;
         border-radius: 5px;
         background-color: #e0e0e0;
@@ -47,18 +41,16 @@
         text-decoration: none;
         transition: background-color 0.3s;
     }
-
     .view-btn:hover {
         background-color: #388e3c;
-        color: white; /* Đổi màu chữ khi hover */
+        color: white;
     }
-
     .view-btn i {
         margin-right: 5px;
     }
 </style>
 
-<h2 class="text-2xl font-semibold mb-4">Danh sách bác sĩ trong {{ room.room_type }}</h2>
+<h2 class="text-2xl font-semibold mb-4">{{ room.room_type }}</h2>
 
 <div class="overflow-x-auto">
     <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg overflow-hidden">
@@ -82,8 +74,8 @@
                     <td class="px-6 py-4">{{ doctor.name }}</td>
                     <td class="px-6 py-4">{{ doctor.specialty_name }}</td> 
                     <td class="px-6 py-4 text-center"> 
-                        <a href="{{ url_for('admin.doctor_schedule', doctor_id=doctor.doctor_id, room_id=room.room_id) }}" class="view-btn">
-                            <i class="fa-solid fa-eye"></i> Xem lịch
+                        <a href="{{ url_for('admin.doctor_weekly_schedule', doctor_id=doctor.doctor_id, week_index=0, year=datetime.now().year, month=datetime.now().month) }}" class="view-btn">
+                            <i class="fa-solid fa-eye"></i> 
                         </a>
                     </td>
                 </tr>

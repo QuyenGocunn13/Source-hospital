@@ -3,34 +3,34 @@ import random
 import csv
 import calendar
 
-# Định nghĩa các lớp trước khi sử dụng
 class Doctor:
     def __init__(self, doctor_id, specialty_name, specialty_id):
         self.id = doctor_id
         self.specialty_name = specialty_name
-        self.specialty_id = specialty_id  # Thêm specialty_id
+        self.specialty_id = specialty_id
 
 class Room:
     def __init__(self, room_id, room_type, specialty_id):
         self.id = room_id
         self.type = room_type
-        self.specialty_id = specialty_id  # Thêm specialty_id
+        self.specialty_id = specialty_id
 
 class TimeSlot:
     def __init__(self, slot_id):
         self.id = slot_id
 
 class Schedule:
-    def __init__(self, doctor_id, room_id, time_slot, day):
+    def __init__(self, doctor_id, room_id, time_slot, day, month, year):
         self.doctor_id = doctor_id
         self.room_id = room_id
-        self.time_slot = time_slot  # Đối tượng TimeSlot
-        self.day = day  # Ngày cụ thể
+        self.time_slot = time_slot
+        self.day = day
+        self.month = month
+        self.year = year
 
     def __repr__(self):
-        return f"(Doctor: {self.doctor_id}, Room: {self.room_id}, TimeSlot: {self.time_slot.id}, Day: {self.day})"
+        return f"(Doctor: {self.doctor_id}, Room: {self.room_id}, TimeSlot: {self.time_slot.id}, Day: {self.day}, Month: {self.month}, Year: {self.year})"
 
-# Lớp đọc tệp CSV cho Doctor, Room, và TimeSlot
 class CSVReader:
     @staticmethod
     def read_doctors(file_path):
@@ -40,7 +40,7 @@ class CSVReader:
             for row in reader:
                 doctor_id = int(row['doctor_id'])
                 specialty_name = row['specialty_name']
-                specialty_id = int(row['specialty_id'])  # Đọc specialty_id
+                specialty_id = int(row['specialty_id'])
                 doctors.append(Doctor(doctor_id, specialty_name, specialty_id))
         return doctors
 
@@ -52,7 +52,7 @@ class CSVReader:
             for row in reader:
                 room_id = int(row['room_id'])
                 room_type = row['room_type']
-                specialty_id = int(row['specialty_id'])  # Đọc specialty_id
+                specialty_id = int(row['specialty_id'])
                 rooms.append(Room(room_id, room_type, specialty_id))
         return rooms
 
@@ -66,35 +66,40 @@ class CSVReader:
                 time_slots.append(TimeSlot(slot_id))
         return time_slots
 
-# Hàm để nhập tháng và năm
 def get_month_year():
-    year = int(input("Nhập năm (ví dụ: 2024): "))
-    month = int(input("Nhập tháng (1-12): "))
-    return year, month
+    while True:
+        try:
+            year = int(input("Nhập năm (ví dụ: 2024): "))
+            month = int(input("Nhập tháng (1-12): "))
+            if 1 <= month <= 12:
+                return year, month
+            else:
+                print("Tháng không hợp lệ! Vui lòng nhập lại.")
+        except ValueError:
+            print("Vui lòng nhập năm và tháng hợp lệ.")
 
-# Hàm để lấy danh sách các ngày hợp lệ trong tháng
 def get_valid_days(year, month):
     num_days = calendar.monthrange(year, month)[1]
     valid_days = [day for day in range(1, num_days + 1) if calendar.weekday(year, month, day) != 6]  # 6 là Chủ Nhật
     return valid_days
 
-# Đường dẫn tệp
 doctor_file = os.path.join(os.path.dirname(__file__), '../Models/doctors.csv')
 room_file = os.path.join(os.path.dirname(__file__), '../Models/rooms.csv')
 time_slot_file = os.path.join(os.path.dirname(__file__), '../Models/time_slots.csv')
-schedule_file = os.path.join(os.path.dirname(__file__), '../Models/schedule.csv')  # Đường dẫn đến tệp schedule.csv
+schedule_file = os.path.join(os.path.dirname(__file__), '../Models/schedule.csv')
 
-# Đọc dữ liệu từ tệp CSV
 doctors = CSVReader.read_doctors(doctor_file)
 rooms = CSVReader.read_rooms(room_file)
 time_slots = CSVReader.read_time_slots(time_slot_file)
 
 class GeneticAlgorithm:
-    def __init__(self, doctors, rooms, time_slots, valid_days, population_size=100, generations=50, cxpb=0.7, mutpb=0.2):
+    def __init__(self, doctors, rooms, time_slots, valid_days, month, year, population_size=200, generations=500, cxpb=0.7, mutpb=0.2):
         self.doctors = doctors
         self.rooms = rooms
         self.time_slots = time_slots
         self.valid_days = valid_days
+        self.month = month
+        self.year = year
         self.population_size = population_size
         self.generations = generations
         self.cxpb = cxpb
@@ -103,12 +108,12 @@ class GeneticAlgorithm:
     def create_individual(self):
         individual = []
         for doctor in self.doctors:
-            num_days_working = random.randint(2, 4)  # Số ngày làm việc ngẫu nhiên cho mỗi bác sĩ, ví dụ 2–4 ngày
+            num_days_working = random.randint(2, 6)  # Số ngày làm việc ngẫu nhiên cho mỗi bác sĩ
             for _ in range(num_days_working):
-                room = random.choice([room for room in self.rooms if room.specialty_id == doctor.specialty_id]).id  # Chọn phòng đúng chuyên khoa
-                time_slot = random.choice(self.time_slots)  # Lấy đối tượng TimeSlot
-                day = random.choice(self.valid_days)  # Chọn ngày hợp lệ
-                individual.append(Schedule(doctor.id, room, time_slot, day))
+                room = random.choice([room for room in self.rooms if room.specialty_id == doctor.specialty_id]).id
+                time_slot = random.choice(self.time_slots)
+                day = random.choice(self.valid_days)
+                individual.append(Schedule(doctor.id, room, time_slot, day, self.month, self.year))
         return individual
 
     def create_population(self):
@@ -121,7 +126,7 @@ class GeneticAlgorithm:
 
         for schedule in individual:
             room_id = schedule.room_id
-            timeslot_id = schedule.time_slot.id  # Lấy id của timeslot từ đối tượng
+            timeslot_id = schedule.time_slot.id
             doctor_id = schedule.doctor_id
             day = schedule.day
 
@@ -132,9 +137,11 @@ class GeneticAlgorithm:
                 violations += 5000
                 continue
 
-            if (doctor_id, room_id, timeslot_id) in room_timeslot:
+            # Kiểm tra trùng lặp lịch trình
+            if (doctor_id, room_id, timeslot_id, day) in room_timeslot:
+                print(f"Trùng lặp phát hiện: Bác sĩ {doctor_id}, Phòng {room_id}, Thời gian {timeslot_id} vào ngày {day}/{self.month}/{self.year}")
                 violations += 1500
-            room_timeslot[(doctor_id, room_id, timeslot_id)] = doctor_id
+            room_timeslot[(doctor_id, room_id, timeslot_id, day)] = doctor_id
 
             if room_info.type != doctor_info.specialty_name:
                 violations += 1000
@@ -161,21 +168,17 @@ class GeneticAlgorithm:
     def mutate(self, individual):
         if random.random() < self.mutpb:
             idx = random.randint(0, len(individual) - 1)
-            
-            # Lấy specialty_id từ doctor_id của lịch
             doctor_id = individual[idx].doctor_id
             specialty_id = next((doctor.specialty_id for doctor in self.doctors if doctor.id == doctor_id), None)
-            
-            # Tìm các phòng phù hợp với specialty_id
             valid_rooms = [room for room in self.rooms if room.specialty_id == specialty_id]
-            
-            if valid_rooms:  # Chỉ chọn nếu có phòng hợp lệ
+
+            if valid_rooms:
                 room = random.choice(valid_rooms).id
-                time_slot = random.choice(self.time_slots)  # Lấy đối tượng TimeSlot
-                day = random.choice(self.valid_days)  # Chọn ngày hợp lệ
-                individual[idx] = Schedule(doctor_id, room, time_slot, day)
+                time_slot = random.choice(self.time_slots)
+                day = random.choice(self.valid_days)
+                individual[idx] = Schedule(doctor_id, room, time_slot, day, self.month, self.year)
             else:
-                print(f"No valid rooms found for doctor ID {doctor_id} with specialty ID {specialty_id}.")  # Thông báo không có phòng hợp lệ
+                print(f"No valid rooms found for doctor ID {doctor_id} with specialty ID {specialty_id}.")
         return individual
 
     def run(self):
@@ -203,27 +206,18 @@ class GeneticAlgorithm:
         best_schedule = min(population, key=self.fitness)
         return best_schedule
 
-# Hàm ghi lịch vào tệp CSV
 def write_schedule_to_csv(schedule, file_path):
     with open(file_path, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
-        writer.writerow(['doctor_id', 'room_id', 'time_slot_id', 'day'])  # Tiêu đề cột
+        writer.writerow(['doctor_id', 'room_id', 'time_slot_id', 'day', 'month', 'year'])
         for entry in schedule:
-            writer.writerow([entry.doctor_id, entry.room_id, entry.time_slot.id, entry.day])
+            writer.writerow([entry.doctor_id, entry.room_id, entry.time_slot.id, entry.day, entry.month, entry.year])
 
-# Nhập tháng và năm
 year, month = get_month_year()
 valid_days = get_valid_days(year, month)
 
-# Chạy thuật toán GA
-ga = GeneticAlgorithm(doctors, rooms, time_slots, valid_days, population_size=200, generations=1000)
+ga = GeneticAlgorithm(doctors, rooms, time_slots, valid_days, month, year)
 best_schedule = ga.run()
 
-# In kết quả
-print("Best Schedule Found:")
-for s in best_schedule:
-    print(s)
-
-# Ghi lịch vào tệp CSV
 write_schedule_to_csv(best_schedule, schedule_file)
-print(f"Lịch đã được ghi vào tệp {schedule_file}.")
+print("Lịch đã được ghi vào tệp schedule.csv.")
