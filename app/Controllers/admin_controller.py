@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from datetime import datetime, timedelta
 from .ReadCSV import read_rooms_from_csv, read_doctors_from_csv, read_time_slots_from_csv, read_specialties_from_csv, read_schedule_from_csv
+import subprocess
 import csv
 import os
 
@@ -40,7 +41,7 @@ def get_week_starts(year, month):
     # Tìm ngày bắt đầu của tuần chứa ngày đầu tiên của tháng
     first_week_start = first_day - timedelta(days=first_day.weekday())
     # Tạo danh sách ngày bắt đầu của 4 tuần trong tháng
-    return [first_week_start + timedelta(weeks=i) for i in range(4)]
+    return [first_week_start + timedelta(weeks=i) for i in range(5)]
 
 # Hàm lấy lịch của bác sĩ theo tháng
 def get_monthly_schedule(doctor_id, year, month):
@@ -50,7 +51,7 @@ def get_monthly_schedule(doctor_id, year, month):
 
     # Xác định ngày bắt đầu của từng tuần trong tháng
     week_starts = get_week_starts(year, month)
-    weekly_schedule = [{"Sáng": [None] * 7, "Chiều": [None] * 7, "Tối": [None] * 7} for _ in range(4)]
+    weekly_schedule = [{"Sáng": [None] * 7, "Chiều": [None] * 7, "Tối": [None] * 7} for _ in range(5)]
 
     # Đọc các tệp CSV cho room và time slot
     room_file_path = os.path.join(os.path.dirname(__file__), '../Models/rooms.csv')
@@ -161,3 +162,60 @@ def doctor_weekly_schedule(doctor_id, week_index):
         last_week=(week_index == len(monthly_schedule) - 1),
         first_week=(week_index == 0)
     )
+
+def log_history(month, year, status):
+    history_file = './Models/history.csv'
+    timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    
+    with open(history_file, mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow([month, year, status, timestamp])
+
+
+@admin_bp.route('/run_ga_doctor', methods=['POST'])
+def run_ga_doctor():
+    year = request.form.get('year')
+    month = request.form.get('month')
+
+    # Kiểm tra đầu vào
+    if not year.isdigit() or not month.isdigit() or not (1 <= int(month) <= 12):
+        flash('Tháng và năm không hợp lệ!', 'error')
+        return redirect(url_for('admin.dashboardadmin'))  # Chuyển hướng về dashboard
+
+    # Chạy GaDoctor.py với tham số year và month
+    try:
+        result = subprocess.run(['python', '../Controllers/GaDoctor.py', year, month], capture_output=True, text=True)
+        
+        # Kiểm tra kết quả chạy
+        if result.returncode == 0:
+            # Ghi lại lịch sử
+            schedule_file_path = './Models/schedule.csv'
+            if os.path.exists(schedule_file_path) and os.path.getsize(schedule_file_path) > 0:
+                status = "Tạo lịch thành công"
+            else:
+                status = "Tháng này đã tạo, bạn có chắc muốn tạo lịch mới?"
+            
+            # Ghi vào lịch sử
+            log_history(month, year, status)
+            flash(status, 'success')  # Thông báo thành công
+        else:
+            flash(f"Có lỗi xảy ra: {result.stderr}", 'error')  # Thông báo lỗi
+
+    except Exception as e:
+        flash(str(e), 'error')  # Thông báo lỗi
+
+    return redirect(url_for('admin.history'))  # Chuyển hướng về trang lịch sử
+
+@admin_bp.route('/history', methods=['GET'])
+def history():
+    history_file = './Models/history.csv'
+    history_data = []
+
+    # Đọc dữ liệu từ tệp CSV
+    if os.path.exists(history_file):
+        with open(history_file, mode='r', encoding='utf-8') as file:
+            reader = csv.reader(file)
+            next(reader)  # Bỏ qua tiêu đề
+            history_data = list(reader)  # Chuyển dữ liệu thành danh sách
+
+    return render_template('history_change.html', history=history_data)

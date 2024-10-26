@@ -2,6 +2,7 @@ import os
 import random
 import csv
 import calendar
+import sys
 
 class Doctor:
     def __init__(self, doctor_id, specialty_name, specialty_id):
@@ -66,17 +67,17 @@ class CSVReader:
                 time_slots.append(TimeSlot(slot_id))
         return time_slots
 
-def get_month_year():
-    while True:
-        try:
-            year = int(input("Nhập năm (ví dụ: 2024): "))
-            month = int(input("Nhập tháng (1-12): "))
-            if 1 <= month <= 12:
-                return year, month
-            else:
-                print("Tháng không hợp lệ! Vui lòng nhập lại.")
-        except ValueError:
-            print("Vui lòng nhập năm và tháng hợp lệ.")
+#def get_month_year():
+#    while True:
+#        try:
+#            year = int(input("Nhập năm (ví dụ: 2024): "))
+#            month = int(input("Nhập tháng (1-12): "))
+#            if 1 <= month <= 12:
+#                return year, month
+#            else:
+#                print("Tháng không hợp lệ! Vui lòng nhập lại.")
+#        except ValueError:
+#            print("Vui lòng nhập năm và tháng hợp lệ.")
 
 def get_valid_days(year, month):
     num_days = calendar.monthrange(year, month)[1]
@@ -213,11 +214,14 @@ def write_schedule_to_csv(schedule, file_path):
         for entry in schedule:
             writer.writerow([entry.doctor_id, entry.room_id, entry.time_slot.id, entry.day, entry.month, entry.year])
 
-year, month = get_month_year()
-valid_days = get_valid_days(year, month)
 
-ga = GeneticAlgorithm(doctors, rooms, time_slots, valid_days, month, year)
-best_schedule = ga.run()
+if __name__ == "__main__":
+    year = int(sys.argv[1])  # Nhận giá trị từ tham số command line
+    month = int(sys.argv[2])  # Nhận giá trị từ tham số command line
+    valid_days = get_valid_days(year, month)
 
-write_schedule_to_csv(best_schedule, schedule_file)
-print("Lịch đã được ghi vào tệp schedule.csv.")
+    ga = GeneticAlgorithm(doctors, rooms, time_slots, valid_days, month, year)
+    best_schedule = ga.run()
+
+    write_schedule_to_csv(best_schedule, schedule_file)
+    print("Lịch đã được ghi vào tệp schedule.csv.")
