@@ -10,12 +10,14 @@ Trang Chủ - My Website
     body {
         font-family: 'Inter', sans-serif;
         line-height: 1.6;
+        background-color: #f0f4f8; /* Thêm màu nền nhẹ nhàng cho toàn trang */
     }
 
     .title h1 {
         font-size: 32px;
         font-weight: 700;
         margin-bottom: 16px;
+        color: #2c7a7b; /* Màu tiêu đề */
     }
 
     .section {
@@ -28,11 +30,12 @@ Trang Chủ - My Website
 
     .service {
         background-color: white;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         border-radius: 20px;
         padding: 24px;
         max-width: 350px;
         transition: transform 0.3s ease;
+        text-align: center; /* Canh giữa nội dung */
     }
 
     .service:hover {
@@ -87,6 +90,11 @@ Trang Chủ - My Website
         border: none;
         border-radius: 30px;
         cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .advisory-form button:hover {
+        background-color: #1d5b5b; /* Màu khi hover */
     }
 
     .about-us {
@@ -162,13 +170,14 @@ Trang Chủ - My Website
         box-sizing: border-box;
         background-color: #f39c12; /* Màu nền banner */
         color: #fff; /* Màu chữ */
-        padding: 10px 0; /* Khoảng cách trên và dưới */
+        padding: 7px 0; /* Khoảng cách trên và dưới */
+        text-align: center; /* Canh giữa chữ */
     }
 
     .marquee p {
         display: inline-block;
         padding-left: 100%; /* Bắt đầu từ bên ngoài bên trái */
-        animation: marquee 15s linear infinite; /* Thay đổi thời gian để điều chỉnh tốc độ */
+        animation: marquee 20s linear infinite; /* Thay đổi thời gian để điều chỉnh tốc độ */
     }
 
     @keyframes marquee {
@@ -183,17 +192,21 @@ Trang Chủ - My Website
 
 <!-- Banner chạy chữ -->
 <div class="marquee">
-    <p>🏥 Tư Vấn Miễn Phí - Đăng kí ngay để được tư vấn miễn phí! 🏥</p>
+    <p>🏥 Tư Vấn Miễn Phí - Đăng kí ngay để được tư vấn miễn phí! 🏥  |  
+        🌟 Chất lượng dịch vụ hàng đầu, phục vụ tận tâm! 🌟
+        🏥 Tư Vấn Miễn Phí - Đăng kí ngay để được tư vấn miễn phí! 🏥  |
+        🌟 Chất lượng dịch vụ hàng đầu, phục vụ tận tâm! 🌟
+    </p>
 </div>
 
 <!-- Banner hình ảnh -->
 <div class="banner my-3">
-    <img src="https://benhvientantao.com/wp-content/uploads/2021/12/banner-chuyen-khoa-dich-vu.jpg" alt="" class="w-full rounded-lg">
+    <img src="https://benhvientantao.com/wp-content/uploads/2021/12/banner-chuyen-khoa-dich-vu.jpg" alt="" class="w-full rounded-lg shadow-lg">
     <div class="relative isolate bg-gray-100 p-6 flex justify-between items-center rounded-lg mt-5">
         <p class="text-sm text-gray-900">
             <strong class="font-semibold">Tư Vấn Miễn Phí</strong> - Đăng kí ngay để được tư vấn miễn phí!
         </p>
-        <a href="#" class="bg-teal-600 text-white px-4 py-2 rounded-full">Đặt Lịch Ngay</a>
+        <a href="#" class="bg-teal-600 text-white px-4 py-2 rounded-full hover:bg-teal-700 transition duration-300">Đặt Lịch Ngay</a>
     </div>
 </div>
 
@@ -211,48 +224,59 @@ Trang Chủ - My Website
 <!-- Team Members Section -->
 <section class="py-24 bg-gray-100">
     <div class="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto text-center">
-        <h2 class="text-3xl font-bold text-gray-900 mb-10">Thành Viên Nhóm 5</h2>
+        <h2 class="text-3xl font-bold text-gray-900 mb-10">Thành Viên</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             <!-- Member 1 -->
-            <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="bg-white p-6 rounded-lg shadow-lg transition-transform duration-300 hover:scale-105">
                 <h3 class="text-xl font-bold text-gray-900">Nguyễn Sang Trọng</h3>
-                <p class="text-gray-600">Developer</p>
+                <p class="text-gray-600">Student</p>
             </div>
             <!-- Member 2 -->
-            <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="bg-white p-6 rounded-lg shadow-lg transition-transform duration-300 hover:scale-105">
                 <h3 class="text-xl font-bold text-gray-900">Trương Minh Nhựt</h3>
-                <p class="text-gray-600">Developer</p>
+                <p class="text-gray-600">Student</p>
             </div>
             <!-- Member 3 -->
-            <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="bg-white p-6 rounded-lg shadow-lg transition-transform duration-300 hover:scale-105">
                 <h3 class="text-xl font-bold text-gray-900">Trần Huỳnh Phụng Quyên</h3>
-                <p class="text-gray-600">Developer</p>
+                <p class="text-gray-600">Student</p>
             </div>
             <!-- Member 4 -->
-            <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="bg-white p-6 rounded-lg shadow-lg transition-transform duration-300 hover:scale-105">
                 <h3 class="text-xl font-bold text-gray-900">Dương Trọng Đức</h3>
-                <p class="text-gray-600">Developer</p>
+                <p class="text-gray-600">Student</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Free Consultation Section -->
-<div class="advisory section section-light flex justify-center">
-    <div class="w-9/12 bg-white p-10 rounded-lg shadow-lg">
-        <div class="text-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Đăng Kí Tư Vấn</h2>
-        </div>
-        <form action="" class="advisory-form flex justify-between gap-3">
-            <input type="text" placeholder="Họ Tên" required>
-            <input type="text" placeholder="Số Điện Thoại" required>
-            <input type="text" placeholder="Dịch Vụ Cần Tư Vấn" required>
-            <button type="submit">Tư Vấn Ngay</button>
-        </form>
-        <div class="text-center mt-4">
-            <p class="text-sm text-gray-500">(*) Cam kết bảo mật thông tin</p>
+<!-- About Us Section -->
+<section class="about-us">
+    <h2>Về Chúng Tôi</h2>
+    <p>
+        Chúng tôi chuyên cung cấp các dịch vụ y tế chất lượng cao với đội ngũ bác sĩ và chuyên gia y tế giàu kinh nghiệm. Với cam kết mang lại sự hài lòng cho bệnh nhân, chúng tôi không ngừng nâng cao chất lượng dịch vụ.
+    </p>
+</section>
+
+<!-- Stats Section -->
+<section class="stats py-20">
+    <div class="container mx-auto text-center">
+        <h2 class="text-3xl font-bold mb-6">Thống Kê Dịch Vụ</h2>
+        <div class="flex justify-around">
+            <div>
+                <h3>100+</h3>
+                <h6>Bác Sĩ</h6>
+            </div>
+            <div>
+                <h3>2000+</h3>
+                <h6>Bệnh Nhân</h6>
+            </div>
+            <div>
+                <h3>50+</h3>
+                <h6>Dịch Vụ</h6>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 {% endblock %}

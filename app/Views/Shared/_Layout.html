@@ -11,22 +11,37 @@
     <style>
         /* Custom nav styles */
         .navbar {
-            background-color: #0dcaf0; /* Màu nền tươi sáng */
+            background: linear-gradient(to right, #007bff, #0dcaf0); /* Gradient từ xanh đậm đến xanh sáng */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+            padding: 0.5rem; /* Giảm padding */
         }
+
         .navbar a {
             color: #ffffff; /* Màu chữ trắng */
+            padding: 5px 10px; /* Giảm padding cho các liên kết */
+            border-radius: 5px; /* Bo tròn góc */
+            transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền */
         }
+
         .navbar a:hover {
-            color: #ffe600; /* Màu chữ khi hover */
+            background-color: rgba(255, 230, 0, 0.8); /* Màu nền khi hover */
+            color: #000; /* Chữ đen khi hover */
         }
+
         /* Nút đăng nhập */
         .login-button {
             background-color: #f39c12; /* Màu nền cam cho nút */
             color: #ffffff; /* Màu chữ trắng cho nút */
+            padding: 5px 10px; /* Giảm padding */
+            border-radius: 5px; /* Bo tròn góc */
         }
+
         .login-button:hover {
             background-color: #e67e22; /* Màu nền cam đậm khi hover */
+            transform: scale(1.05); /* Hiệu ứng phóng to */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bóng đổ khi hover */
         }
+        
     </style>
 </head>
 
@@ -36,7 +51,7 @@
             <div class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center">
                     <a href="{{ url_for('shared.index') }}" class="font-bold text-2xl text-white">Bệnh Viện HUIT</a>
-                </div>
+                </div>                
                 <div class="space-x-6">
                     <a href="{{ url_for('shared.index') }}" class="hover:text-yellow-400">Trang chủ</a>
                     <a href="{{ url_for('shared.about') }}" class="hover:text-yellow-400">Về chúng tôi</a>

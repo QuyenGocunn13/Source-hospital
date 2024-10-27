@@ -7,7 +7,7 @@ from Controllers.user_controller import user_bp
 from Controllers.auth_controller import auth_bp  
 
 def create_app():
-    app = Flask(__name__, static_folder='Assets')
+    app = Flask(__name__)
 
     # Đặt secret_key cho ứng dụng Flask
     app.secret_key = os.urandom(24)  # Hoặc bạn có thể tự đặt một chuỗi ngẫu nhiên, vd: 'my_secret_key'

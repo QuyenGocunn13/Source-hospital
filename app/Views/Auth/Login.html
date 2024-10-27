@@ -2,86 +2,102 @@
 {% block content %}
 <style>
     .login {
-        height: 100vh; /* Chiều cao chiếm toàn bộ chiều cao màn hình */
+        height: 100vh;
         display: flex;
         justify-content: center;
-        align-items: center; /* Canh giữa nội dung */
-        background-color: #f9f9f9; /* Màu nền nhẹ */
+        align-items: center;
+        background: linear-gradient(135deg, #f0f4ff, #c9e8ff);
     }
     .form-atri {
         padding: 40px;
-        width: 400px; /* Chiều rộng vừa phải */
-        background-color: white; /* Nền trắng cho form */
-        border-radius: 10px; /* Bo góc form */
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+        width: 400px;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        text-align: center;
     }
     h1 {
-        color: #2c3e50; /* Màu chữ tiêu đề */
+        color: #2c3e50;
+        margin-bottom: 20px;
     }
     label {
-        color: #34495e; /* Màu chữ cho nhãn */
+        color: #34495e;
+        font-weight: 600;
+        font-size: 0.95rem;
     }
-    input {
-        border-radius: 5px; /* Bo góc cho ô nhập */
-        border: 1px solid #bdc3c7; /* Đường viền */
+    .input-group {
+        position: relative;
+        margin-bottom: 1rem;
     }
-    input:focus {
-        border-color: #3498db; /* Màu đường viền khi ô nhập được chọn */
-        outline: none; /* Tắt viền ngoài */
+    .input-group i {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        color: #bdc3c7;
+        font-size: 1.2rem;
+    }
+    .input-group input {
+        width: 100%;
+        padding: 10px 10px 10px 40px; /* Tạo khoảng trống bên trái cho icon */
+        border: 1px solid #bdc3c7;
+        border-radius: 8px;
+        background: #f5f5f5;
+        transition: border-color 0.3s, background-color 0.3s;
+        font-size: 0.95rem;
+    }
+    .input-group input:focus {
+        border-color: #3498db;
+        background: #e9f4fc;
+        outline: none;
     }
     button {
-        background-color: #27ae60; /* Màu nền nút */
-        color: white; /* Màu chữ nút */
-        transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 8px;
+        background-color: #27ae60;
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
     button:hover {
-        background-color: #219150; /* Màu nền nút khi hover */
+        background-color: #219150;
     }
-    .forgot-password {
-        color: #3498db; /* Màu chữ cho đường dẫn quên mật khẩu */
-        transition: color 0.3s; /* Hiệu ứng chuyển màu */
+    .forgot-password, .register-link {
+        color: #3498db;
+        transition: color 0.3s;
+        font-size: 0.9rem;
     }
-    .forgot-password:hover {
-        color: #2980b9; /* Màu chữ khi hover */
-    }
-    .register-link {
-        display: block;
-        margin-top: 20px; /* Khoảng cách với nút Đăng Nhập */
-        text-align: center;
-        color: #3498db; /* Màu chữ cho đường dẫn đăng ký */
-    }
-    .register-link:hover {
-        color: #2980b9; /* Màu chữ khi hover */
+    .forgot-password:hover, .register-link:hover {
+        color: #2980b9;
     }
 </style>
 <body>
     <div class="login">
-        <form action="{{ url_for('auth.login') }}" method="POST" class="space-y-8 form-atri">  <!-- Thêm method POST -->
-            <h1 class="text-2xl font-bold text-center">Welcome Back</h1>
-            <div class="grid grid-cols-1 gap-y-4">
-                <div>
-                    <label for="username" class="block text-sm font-medium">Username</label>
-                    <input type="text" name="username" id="username" autocomplete="username"
-                           class="block w-full mt-1 p-2 border border-gray-300 rounded focus:border-blue-500 focus:ring focus:ring-blue-200"
-                           placeholder="username" required>
-                </div>
-                <div>
-                    <label for="password" class="block text-sm font-medium">Password</label>
-                    <input type="password" name="password" id="password" autocomplete="current-password"
-                           class="block w-full mt-1 p-2 border border-gray-300 rounded focus:border-blue-500 focus:ring focus:ring-blue-200"
-                           placeholder="••••••••" required>
-                </div>
+        <form action="{{ url_for('auth.login') }}" method="POST" class="form-atri">
+            <h1 class="text-2xl font-bold">Đăng Nhập Tài Khoản</h1>
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" name="username" id="username" autocomplete="username"
+                       placeholder="Tên đăng nhập" required>
             </div>
-            <div class="flex items-center justify-between">
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" id="password" autocomplete="current-password"
+                       placeholder="••••••••" required>
+            </div>
+            <div class="flex items-center justify-between mb-4">
                 <div class="flex items-start">
-                    <input id="remember" aria-describedby="remember" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300">
-                    <label for="remember" class="ml-2 text-sm text-gray-500">Remember me</label>
+                    <input id="remember" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300">
+                    <label for="remember" class="ml-2 text-sm text-gray-500">Nhớ cho lần sau</label>
                 </div>
-                <a href="#" class="text-sm font-medium forgot-password">Forgot password?</a>
+                <a href="#" class="forgot-password">Quên mật khẩu?</a>
             </div>
-            <div class="text-center">
-                <button type="submit" class="w-full px-4 py-2 rounded">Sign In</button>
-            </div>
+            <button type="submit">Đăng Nhập</button>
+            <div class="register-link mt-4">Bạn chưa có tài khoản? <a href="#">Đăng ký ngay</a></div>
         </form>
     </div>
 </body>
