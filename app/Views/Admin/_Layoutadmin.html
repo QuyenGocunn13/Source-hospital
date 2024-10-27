@@ -16,10 +16,12 @@
             padding: 0;
         }
 
-        body {
+        html, body {
+            height: 100%;
             font-family: 'Arial', sans-serif;
             background-color: #f4f7fa;
             color: #333;
+            margin: 0;
         }
 
         .main-content {
@@ -30,7 +32,7 @@
         }
 
         .nav-bar {
-            background-color: #2c3e50; /* Màu nền tối cho sidebar */
+            background-color: #2c3e50;
             color: white;
             width: 250px;
             height: 100vh;
@@ -56,11 +58,11 @@
         }
 
         .element-navbar div:hover {
-            background-color: rgba(255, 255, 255, 0.1); /* Màu nền khi hover */
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .element-navbar a:hover {
-            color: #1abc9c; /* Màu chữ khi hover */
+            color: #1abc9c;
         }
 
         .nav-bar.collapsed .element-navbar div {
@@ -77,15 +79,14 @@
             display: block;
         }
 
-        /* Sidebar title with icon */
         .title {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px 0;
-            background-color: #34495e; /* Màu nền cho tiêu đề */
+            background-color: #34495e;
             color: white;
-            font-weight: bold; /* In đậm chữ tiêu đề */
+            font-weight: bold;
         }
 
         .title i {
@@ -100,7 +101,6 @@
             margin: 0;
         }
 
-        /* Logout button styles */
         .logout-btn {
             display: flex;
             align-items: center;
@@ -109,7 +109,7 @@
             padding: 10px 16px;
             margin: 20px auto;
             border-radius: 6px;
-            background-color: #e74c3c; /* Màu nền cho nút logout */
+            background-color: #e74c3c;
             color: white;
             font-size: 0.875rem;
             font-weight: bold;
@@ -124,40 +124,44 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            color: white; /* Màu chữ của nút đăng xuất */
+            color: white;
             text-decoration: none;
         }
 
         .logout-btn:hover {
-            background-color: #c0392b; /* Màu nền khi hover */
+            background-color: #c0392b;
         }
 
         .nav-bar.collapsed .logout-btn span {
-            display: none; /* Ẩn chữ "Đăng Xuất" khi sidebar bị thu gọn */
+            display: none;
         }
 
-        /* Header and other components */
         .header {
-            background-color: #ffffff;
+            background-color: #34495e;
             border-bottom: 1px solid #ddd;
-            padding: 10px 20px;
+            padding: 0 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            height: 60px;
         }
 
         .header h1 {
-            color: #1f1f1f;
+            color: #ecf0f1;
+        }
+
+        #toggleButton {
+            color: white; 
         }
     </style>
 </head>
 
 <body>
-    <div class="h-screen flex">
+    <div class="flex">
         <div class="nav-bar" id="sidebar">
             <div class="title">
-                <i class="fa-solid fa-user-shield"></i> <!-- Icon added next to Admin text -->
+                <i class="fa-solid fa-user-shield"></i>
                 <h2 class="text-3xl">Admin</h2>
             </div>
             <hr class="my-2">
@@ -175,7 +179,6 @@
                     <i class="mr-3 fa-solid fa-message"></i><a href="">Tin Nhắn</a>
                 </div>
             </nav>
-            <!-- Logout button -->
             <div class="logout-btn">
                 <a href="{{ url_for('auth.logout') }}" class="flex items-center space-x-2">
                     <span>Đăng Xuất</span>
@@ -192,7 +195,6 @@
             </div>
             <main>
                 {% block content %}
-                <!-- Nội dung trang sẽ được chèn tại đây -->
                 {% endblock %}
             </main>
         </div>
@@ -201,11 +203,22 @@
     <script>
         document.getElementById('toggleButton').addEventListener('click', function () {
             const sidebar = document.getElementById('sidebar');
+            const icon = document.getElementById('toggleButton');
+            
             sidebar.classList.toggle('collapsed');
+    
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-chevron-right'); 
+            } else {
+                icon.classList.remove('fa-chevron-right'); 
+                icon.classList.add('fa-bars'); 
+            }
+
             const content = document.getElementById('content');
             content.style.marginLeft = sidebar.classList.contains('collapsed') ? '60px' : '250px';
         });
-    </script>
+    </script>    
 </body>
 
 </html>

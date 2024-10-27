@@ -18,25 +18,26 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f0f4f8; /* Màu nền nhạt */
+            background-color: #f0f4f8;
             color: #333;
         }
 
         .main-content {
-            background-color: #ffffff; /* Màu nền trắng cho nội dung */
+            background-color: #ffffff;
             padding: 20px;
-            margin-left: 200px; /* Giảm kích thước sidebar */
+            margin-left: 200px;
             transition: margin-left 0.3s;
         }
 
         .nav-bar {
-            background-color: #e0f7fa; /* Màu xanh nhạt phù hợp với bệnh viện */
-            color: #00796b; /* Màu xanh lá cây dịu nhẹ cho chữ */
-            width: 200px; /* Giảm kích thước sidebar */
+            background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+            color: #00796b;
+            width: 200px;
             height: 100vh;
             transition: width 0.3s ease;
             position: fixed;
             overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Đổ bóng cho sidebar */
         }
 
         .nav-bar.collapsed {
@@ -44,24 +45,26 @@
         }
 
         .nav-bar a {
-            color: #00796b; /* Màu xanh lá cây dịu nhẹ cho chữ */
+            color: #00796b;
             text-decoration: none;
         }
 
         .element-navbar div {
             position: relative;
-            transition: background-color 0.3s ease;
-            padding: 8px 16px; /* Giảm kích thước padding */
-            font-size: 0.875rem; /* Giảm kích thước chữ trong sidebar */
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Thêm hiệu ứng chuyển động */
+            padding: 12px 16px; /* Tăng kích thước padding */
+            font-size: 0.95rem; /* Giảm kích thước chữ trong sidebar */
+            border-radius: 8px; /* Bo góc */
         }
 
         .element-navbar a:hover {
-        color: #004d40; /* Màu tối hơn khi hover */
-        font-weight: bold; /* Làm nổi bật chữ khi hover */
+            color: #004d40;
+            font-weight: bold;
         }
 
         .element-navbar div:hover {
-            background-color: rgba(0, 150, 136, 0.3); /* Màu nền đậm hơn khi hover */
+            background-color: rgba(0, 150, 136, 0.2); /* Màu nền đậm hơn khi hover */
+            transform: scale(1.05); /* Tăng kích thước khi hover */
         }
 
         .nav-bar.collapsed .element-navbar div {
@@ -78,18 +81,22 @@
             display: block;
         }
 
-        /* Sidebar title with icon */
         .title {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px 0;
-            background-color: #00796b; /* Màu xanh lá cây đậm hơn cho tiêu đề */
+            background-color: #00796b; /* Màu nền header */
             color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .title i {
             margin-right: 10px;
+        }
+
+        .nav-bar a i {
+            color: #ffffff; 
         }
 
         .nav-bar.collapsed .title h2 {
@@ -105,26 +112,26 @@
             align-items: center;
             justify-content: center;
             width: 80%;
-            padding: 8px 12px; /* Giảm kích thước padding */
+            padding: 12px 14px; /* Tăng kích thước padding */
             margin: 20px auto;
             border-radius: 6px;
-            background-color: white; /* Nền trắng */
-            color: #00796b; /* Màu xanh lá cây dịu cho chữ của nút đăng xuất */
-            font-size: 0.875rem; /* Giảm kích thước chữ cho nút đăng xuất */
+            background-color: #ffffff;
+            color: #00796b;
+            font-size: 0.875rem;
             font-weight: bold;
             transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
-            text-decoration: none; /* Loại bỏ gạch chân */
+            text-decoration: none;
         }
 
         .logout-btn span {
-            margin-right: 10px; /* Add margin between the text and the icon */
+            margin-right: 10px;
         }
 
         .logout-btn a:hover {
-            background-color: #ff4d4d; /* Màu đỏ khi hover */
-            color: white; /* Màu trắng cho chữ khi hover */
+            background-color: #ff4d4d;
+            color: white;
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
         }
 
@@ -137,11 +144,10 @@
             display: none;
         }
 
-        /* Header and other components */
         .header {
-            background-color: #ffffff; /* Màu trắng cho header */
+            background-color: #009688; /* Màu nền header đã điều chỉnh */
             border-bottom: 1px solid #ddd;
-            padding: 10px 20px;
+            padding: 10px 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -149,41 +155,17 @@
         }
 
         .header h1 {
-            color: #1f1f1f;
+            color: #ffffff; /* Màu chữ trong header */
+        }
+
+        #toggleButton {
+            color: white; 
         }
     </style>
 </head>
 
 <body>
     <div class="h-screen flex">
-        <div class="nav-bar" id="sidebar">
-            <div class="title">
-                <i class="fa-solid fa-user-shield"></i> <!-- Icon added next to Admin text -->
-                <h2 class="text-2xl">User</h2> <!-- Giảm kích thước chữ -->
-            </div>
-            <hr class="my-2">
-            <nav class="element-navbar pt-4">
-                <div>
-                    <i class="mr-3 fa-solid fa-user"></i><a href="{{ url_for('user.userProfile') }}">Hồ Sơ</a>
-                </div>
-                <div>
-                    <i class="mr-3 fa-solid fa-calendar"></i><a href="{{ url_for('user.user_schedule', doctor_id=doctor.doctor_id, week_index=0, year=year, month=month) }}">Lịch làm việc</a>
-                </div>                
-                <div>
-                    <i class="mr-3 fa-solid fa-hospital"></i><a href="">Thông Báo</a>
-                </div>
-                <div>
-                    <i class="mr-3 fa-solid fa-message"></i><a href="">Tin Nhắn</a>
-                </div>
-            </nav>
-            <!-- Logout button -->
-            <div class="logout-btn">
-                <a href="{{ url_for('auth.logout') }}" class="flex items-center space-x-2">
-                    <span>Đăng Xuất</span>
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                </a>
-            </div>
-        </div>
         <div class="main-content w-full" id="content">
             <div class="header">
                 <div class="flex items-center">
@@ -193,9 +175,35 @@
             </div>
             <main>
                 {% block content %}
-                <!-- Nội dung trang sẽ được chèn tại đây -->
                 {% endblock %}
             </main>
+        </div>
+        <div class="nav-bar" id="sidebar">
+            <div class="title">
+                <i class="fa-solid fa-user-shield"></i>
+                <h2 class="text-2xl">User</h2>
+            </div>
+            <hr class="my-2">
+            <nav class="element-navbar pt-4">
+                <div>
+                    <i class="mr-3 fa-solid fa-user"></i><a href="{{ url_for('user.userProfile') }}">Hồ Sơ</a>
+                </div>
+                <div>
+                    <i class="mr-3 fa-solid fa-calendar"></i><a href="{{ url_for('user.user_schedule', doctor_id=doctor.doctor_id, week_index=0, year=year, month=month) }}">Lịch làm việc</a>
+                </div>
+                <div>
+                    <i class="mr-3 fa-solid fa-hospital"></i><a href="">Thông Báo</a>
+                </div>
+                <div>
+                    <i class="mr-3 fa-solid fa-message"></i><a href="">Tin Nhắn</a>
+                </div>
+            </nav>
+            <div class="logout-btn">
+                <a href="{{ url_for('auth.logout') }}" class="flex items-center space-x-2">
+                    <span>Đăng Xuất</span>
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -205,6 +213,14 @@
             sidebar.classList.toggle('collapsed');
             const content = document.getElementById('content');
             content.style.marginLeft = sidebar.classList.contains('collapsed') ? '60px' : '200px';
+
+            // Thay đổi icon hamburger
+            const icon = sidebar.classList.contains('collapsed') ? 'fa-solid fa-chevron-right' : 'fa-solid fa-bars';
+            document.getElementById('toggleButton').className = icon + ' pr-2 fa-lg cursor-pointer';
+
+            // Thay đổi màu sắc icon
+            const button = document.getElementById('toggleButton');
+            button.style.color = '#ffffff'; 
         });
     </script>
 </body>
