@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard</title>
+    <title>Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
@@ -25,14 +25,14 @@
         .main-content {
             background-color: #ffffff; /* Màu nền trắng cho nội dung */
             padding: 20px;
-            margin-left: 250px;
+            margin-left: 200px; /* Giảm kích thước sidebar */
             transition: margin-left 0.3s;
         }
 
         .nav-bar {
-            background-color: #4caf50; /* Màu xanh lá cây tươi sáng */
-            color: white;
-            width: 250px;
+            background-color: #e0f7fa; /* Màu xanh nhạt phù hợp với bệnh viện */
+            color: #00796b; /* Màu xanh lá cây dịu nhẹ cho chữ */
+            width: 200px; /* Giảm kích thước sidebar */
             height: 100vh;
             transition: width 0.3s ease;
             position: fixed;
@@ -44,23 +44,24 @@
         }
 
         .nav-bar a {
-            color: white;
+            color: #00796b; /* Màu xanh lá cây dịu nhẹ cho chữ */
             text-decoration: none;
         }
 
         .element-navbar div {
             position: relative;
             transition: background-color 0.3s ease;
-            padding: 10px 20px;
-            font-size: 1.125rem; /* Tăng kích thước chữ trong sidebar */
-        }
-
-        .element-navbar div:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px; /* Giảm kích thước padding */
+            font-size: 0.875rem; /* Giảm kích thước chữ trong sidebar */
         }
 
         .element-navbar a:hover {
-            color: #DDEBF9;
+        color: #004d40; /* Màu tối hơn khi hover */
+        font-weight: bold; /* Làm nổi bật chữ khi hover */
+        }
+
+        .element-navbar div:hover {
+            background-color: rgba(0, 150, 136, 0.3); /* Màu nền đậm hơn khi hover */
         }
 
         .nav-bar.collapsed .element-navbar div {
@@ -83,7 +84,7 @@
             align-items: center;
             justify-content: center;
             padding: 10px 0;
-            background-color: #388e3c; /* Màu xanh lá cây đậm hơn cho tiêu đề */
+            background-color: #00796b; /* Màu xanh lá cây đậm hơn cho tiêu đề */
             color: white;
         }
 
@@ -104,12 +105,12 @@
             align-items: center;
             justify-content: center;
             width: 80%;
-            padding: 10px 16px;
+            padding: 8px 12px; /* Giảm kích thước padding */
             margin: 20px auto;
             border-radius: 6px;
             background-color: white; /* Nền trắng */
-            color: #6c757d; /* Màu xám dịu cho chữ của nút đăng xuất */
-            font-size: 1.125rem; /* Tăng kích thước chữ cho nút đăng xuất */
+            color: #00796b; /* Màu xanh lá cây dịu cho chữ của nút đăng xuất */
+            font-size: 0.875rem; /* Giảm kích thước chữ cho nút đăng xuất */
             font-weight: bold;
             transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -158,12 +159,12 @@
         <div class="nav-bar" id="sidebar">
             <div class="title">
                 <i class="fa-solid fa-user-shield"></i> <!-- Icon added next to Admin text -->
-                <h2 class="text-3xl">User</h2>
+                <h2 class="text-2xl">User</h2> <!-- Giảm kích thước chữ -->
             </div>
             <hr class="my-2">
             <nav class="element-navbar pt-4">
                 <div>
-                    <i class="mr-3 fa-solid fa-user"></i><a href="{{ url_for('user.user') }}">Hồ Sơ</a>
+                    <i class="mr-3 fa-solid fa-user"></i><a href="{{ url_for('user.userProfile') }}">Hồ Sơ</a>
                 </div>
                 <div>
                     <i class="mr-3 fa-solid fa-calendar"></i><a href="{{ url_for('user.user_schedule', doctor_id=doctor.doctor_id, week_index=0, year=year, month=month) }}">Lịch làm việc</a>
@@ -187,7 +188,7 @@
             <div class="header">
                 <div class="flex items-center">
                     <i id="toggleButton" class="fa-solid fa-bars pr-2 fa-lg cursor-pointer"></i>
-                    <h1 class="text-2xl font-semibold">Dashboard</h1>
+                    <h1 class="text-2xl font-semibold">Menu</h1>
                 </div>
             </div>
             <main>
@@ -203,7 +204,7 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('collapsed');
             const content = document.getElementById('content');
-            content.style.marginLeft = sidebar.classList.contains('collapsed') ? '60px' : '250px';
+            content.style.marginLeft = sidebar.classList.contains('collapsed') ? '60px' : '200px';
         });
     </script>
 </body>

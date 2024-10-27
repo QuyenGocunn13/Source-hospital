@@ -1,30 +1,76 @@
 {% extends "_Layoutadmin.html" %}
 
 {% block content %}
-<h2 class="text-2xl font-semibold mb-4">Lịch Trình Tuần của Bác Sĩ: {{ doctor_name }}</h2>
-<p>Tuần: {{ week_index + 1 }} / Tháng {{ month }} - {{ year }}</p>
+<!-- Tiêu đề và thông tin tuần/tháng -->
+<div class="flex justify-between items-center mb-4">
+    <div>
+        <h2 class="text-lg font-bold text-gray-800">Bác Sĩ: {{ doctor_name }}</h2> <!-- Kích thước chữ nhỏ hơn -->
+        <p class="text-gray-600 text-lg">Tuần: {{ week_index + 1 }} / Tháng {{ month }} - {{ year }}</p> <!-- Kích thước chữ lớn hơn -->
+    </div>
 
+    <!-- Các nút điều hướng -->
+    <div class="flex items-center space-x-2">
+        <!-- Nút chọn ngày tháng năm -->
+        <input type="date" class="border rounded-lg px-2 py-1 text-gray-700 border-gray-400">
+
+        <!-- Nút Hiện tại -->
+        <button class="bg-blue-300 text-gray-800 py-1 px-3 rounded text-sm hover:bg-blue-400 transition duration-200">
+            <i class="fas fa-calendar-day"></i> Hiện tại
+        </button>
+
+        <!-- Nút Trở về -->
+        {% if not first_week %}
+            <a href="{{ url_for('admin.doctor_weekly_schedule', doctor_id=doctor_id, week_index=week_index - 1, year=year, month=month) }} "
+               class="bg-blue-300 text-gray-800 py-1 px-3 rounded text-sm hover:bg-blue-400 transition duration-200">
+               < Trở về
+            </a>
+        {% else %}
+            <span class="bg-gray-300 text-gray-600 py-1 px-3 rounded text-sm"> < Trở về </span>
+        {% endif %}
+
+        <!-- Nút Tiếp -->
+        {% if not last_week %}
+            <a href="{{ url_for('admin.doctor_weekly_schedule', doctor_id=doctor_id, week_index=week_index + 1, year=year, month=month) }} "
+               class="bg-blue-300 text-gray-800 py-1 px-3 rounded text-sm hover:bg-blue-400 transition duration-200">
+               Tiếp >
+            </a>
+        {% else %}
+            <span class="bg-gray-300 text-gray-600 py-1 px-3 rounded text-sm"> Tiếp > </span>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Phần bảng lịch trình -->
 <div class="overflow-x-auto">
     <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
         <thead>
             <tr>
-                <th class="px-4 py-2 bg-gray-800 text-white">Ca Trực</th>
+                <th class="px-2 py-2 bg-blue-200 text-gray-800 border border-gray-400" style="width: 80px;">Ca Trực</th>
+                {% set days_of_week = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'] %}
                 {% for i in range(7) %}
-                    <th class="px-4 py-2 bg-gray-800 text-white">Thứ {{ i + 2 if i < 6 else 'CN' }}</th>
+                    <th class="px-4 py-2 bg-blue-200 text-gray-800 border border-gray-400" style="width: 120px;">{{ days_of_week[i] }}</th>
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for time_slot, days in weekly_schedule.items() %}
-                <tr class="border-b hover:bg-gray-100">
-                    <td class="px-4 py-2 font-medium">{{ time_slot }}</td>
+                <tr class="border-b hover:bg-gray-200">
+                    <td class="px-2 py-2 font-medium text-center 
+                    {% if time_slot == 'Sáng' %} bg-yellow-100 
+                    {% elif time_slot == 'Chiều' %} bg-orange-100 
+                    {% elif time_slot == 'Tối' %} bg-pink-100 
+                    {% else %} bg-blue-50 
+                    {% endif %} 
+                    border border-gray-400" style="width: 80px;">{{ time_slot }}</td>
                     {% for day in days %}
-                        <td class="px-4 py-2">
+                        <td class="px-4 py-2 text-center border border-gray-300" style="height: 100px; width: 120px;">
                             {% if day %}
-                                <p>{{ day.date }}</p>
-                                <p>Phòng: {{ day.room_type }}</p>
+                                <div class="p-2 border border-gray-300 bg-green-200 rounded-md">
+                                    <p class="text-sm font-semibold text-gray-800">{{ day.date }}</p>
+                                    <p class="text-xs text-gray-600">Phòng: {{ day.room_type }}</p>
+                                </div>
                             {% else %}
-                            
+                                <p class="text-gray-400"></p>
                             {% endif %}
                         </td>
                     {% endfor %}
@@ -34,19 +80,4 @@
     </table>
 </div>
 
-<div class="mt-4">
-    <div class="nav-buttons">
-        {% if not first_week %}
-            <a href="{{ url_for('admin.doctor_weekly_schedule', doctor_id=doctor_id, week_index=week_index - 1, year=year, month=month) }}" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500 transition duration-200">← Tuần Trước</a>
-        {% else %}
-            <span class="text-gray-500 py-2 px-4 rounded">← Tuần Trước</span>
-        {% endif %}
-        
-        {% if not last_week %}
-            <a href="{{ url_for('admin.doctor_weekly_schedule', doctor_id=doctor_id, week_index=week_index + 1, year=year, month=month) }}" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500 transition duration-200">Tuần Tiếp Theo →</a>
-        {% else %}
-            <span class="text-gray-500 py-2 px-4 rounded">Tuần Tiếp Theo →</span>
-        {% endif %}
-    </div>
-</div>
 {% endblock %}

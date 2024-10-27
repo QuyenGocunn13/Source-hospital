@@ -15,7 +15,7 @@
 
     .search-container {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-between; 
         align-items: center;
         margin-bottom: 20px;
     }
@@ -46,12 +46,12 @@
     }
 
     th {
-        background-color: #333; /* Màu nền cho header */
+        background-color: #489cb8; /* Màu nền cho header */
         color: white; /* Màu chữ cho header */
     }
 
     tr:hover {
-        background-color: #f1f1f1; /* Màu nền khi hover */
+        background-color: #d1ecf1; /* Màu nền khi hover (xanh dịu hơn) */
     }
 
     .action-btns {
@@ -62,14 +62,14 @@
     .action-btn {
         padding: 6px 10px; /* Padding cho nút */
         border-radius: 5px;
-        background-color: #e0e0e0; /* Màu nền cho nút */
+        background-color: #cfe2f3; /* Màu nền cho nút (xanh dịu hơn) */
         color: #333; /* Màu chữ cho nút */
         text-decoration: none; /* Không gạch chân */
         transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
     }
 
     .action-btn:hover {
-        background-color: #c0c0c0; /* Màu nền khi hover */
+        background-color: #a0c4e0; /* Màu nền khi hover (xanh dịu hơn) */
     }
 
     .action-btn i {
@@ -79,13 +79,13 @@
 
 <div class="flex-container">
     <div class="search-container">
-        <select id="department-dropdown">
+        <select id="department-dropdown" onchange="filterResults()">
             <option value="">Chọn Khoa</option>
             {% for room in rooms %}
                 <option value="{{ room.room_id }}">{{ room.room_type }}</option>
             {% endfor %}
         </select>
-        <input type="text" id="search-input" placeholder="Tìm kiếm khoa..." onkeyup="filterDepartments()">
+        <input type="text" id="search-input" placeholder="Tìm kiếm theo Tên hoặc Mã Khoa..." onkeyup="filterResults()">
     </div>
 
     <div class="table-wrapper">
@@ -99,7 +99,7 @@
             </thead>
             <tbody id="department-table-body">
                 {% for room in rooms %}
-                <tr>
+                <tr data-department-id="{{ room.room_id }}">
                     <td>{{ room.room_id }}</td>
                     <td>{{ room.room_type }}</td>
                     <td>
@@ -115,17 +115,29 @@
 </div>
 
 <script>
-    function filterDepartments() {
+    function filterResults() {
+        const dropdown = document.getElementById('department-dropdown');
+        const selectedDepartment = dropdown.value;
         const input = document.getElementById('search-input');
         const filter = input.value.toLowerCase();
         const tableBody = document.getElementById('department-table-body');
         const rows = tableBody.getElementsByTagName('tr');
 
         for (let i = 0; i < rows.length; i++) {
-            const cell = rows[i].getElementsByTagName('td')[1]; // Chọn cột Tên Khoa
-            if (cell) {
-                const txtValue = cell.textContent || cell.innerText;
-                rows[i].style.display = txtValue.toLowerCase().includes(filter) ? "" : "none";
+            const departmentId = rows[i].getAttribute('data-department-id');
+            const cells = rows[i].getElementsByTagName('td');
+            const roomIdValue = cells[0].textContent || cells[0].innerText; // Lấy cột Mã Khoa
+            const roomTypeValue = cells[1].textContent || cells[1].innerText; // Lấy cột Tên Khoa
+
+            // Kiểm tra điều kiện hiển thị hàng
+            const matchesDepartment = selectedDepartment === "" || departmentId === selectedDepartment;
+            const matchesSearch = roomIdValue.toLowerCase().includes(filter) || roomTypeValue.toLowerCase().includes(filter);
+
+            // Hiển thị hàng nếu cả hai điều kiện đều đúng
+            if (matchesDepartment && matchesSearch) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
             }
         }
     }

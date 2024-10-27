@@ -30,7 +30,7 @@
         }
 
         .nav-bar {
-            background-color: #1f1f1f;
+            background-color: #2c3e50; /* Màu nền tối cho sidebar */
             color: white;
             width: 250px;
             height: 100vh;
@@ -56,11 +56,11 @@
         }
 
         .element-navbar div:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.1); /* Màu nền khi hover */
         }
 
         .element-navbar a:hover {
-            color: #DDEBF9;
+            color: #1abc9c; /* Màu chữ khi hover */
         }
 
         .nav-bar.collapsed .element-navbar div {
@@ -83,8 +83,9 @@
             align-items: center;
             justify-content: center;
             padding: 10px 0;
-            background-color: #1f1f1f;
+            background-color: #34495e; /* Màu nền cho tiêu đề */
             color: white;
+            font-weight: bold; /* In đậm chữ tiêu đề */
         }
 
         .title i {
@@ -108,14 +109,14 @@
             padding: 10px 16px;
             margin: 20px auto;
             border-radius: 6px;
-            background-color: white;
-            color: #007BFF;
+            background-color: #e74c3c; /* Màu nền cho nút logout */
+            color: white;
             font-size: 0.875rem;
             font-weight: bold;
             transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
-            text-decoration: none; /* Đảm bảo không có gạch chân */
+            text-decoration: none;
         }
 
         .logout-btn a {
@@ -123,33 +124,17 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            color: #007BFF; /* Màu xanh cho chữ */
-            text-decoration: none; /* Đảm bảo không có gạch chân */
-        }
-
-        .logout-btn span {
-            margin-right: 10px; /* Khoảng cách giữa chữ và icon */
+            color: white; /* Màu chữ của nút đăng xuất */
+            text-decoration: none;
         }
 
         .logout-btn:hover {
-            background-color: #ff4d4d; /* Màu nền khi hover */
-            color: white;
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .logout-btn:hover a {
-            color: white; /* Màu chữ khi hover */
-        }
-
-        .nav-bar.collapsed .logout-btn {
-            justify-content: center;
-            padding: 10px;
+            background-color: #c0392b; /* Màu nền khi hover */
         }
 
         .nav-bar.collapsed .logout-btn span {
-            display: none;
+            display: none; /* Ẩn chữ "Đăng Xuất" khi sidebar bị thu gọn */
         }
-
 
         /* Header and other components */
         .header {
@@ -160,22 +145,6 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .header .user {
-            display: flex;
-            align-items: center;
-        }
-
-        .header img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .header i {
-            margin-left: 15px;
         }
 
         .header h1 {
@@ -194,13 +163,13 @@
             <hr class="my-2">
             <nav class="element-navbar pt-4">
                 <div>
-                    <i class="mr-3 fa-solid fa-user"></i><a href="{{ url_for('admin.dashboardadmin') }}">Hồ Sơ</a>
+                    <i class="mr-3 fa-solid fa-home"></i><a href="{{ url_for('admin.dashboardadmin') }}">Trang Chủ</a>
                 </div>
                 <div>
                     <i class="mr-3 fa-solid fa-users"></i><a href="{{ url_for('admin.manage_users') }}">Quản Lý Bác Sĩ</a>
                 </div>
                 <div>
-                    <i class="mr-3 fa-solid fa-clock-rotate-left"></i><a href="{{ url_for('admin.history') }}">Lịch Sử</a>
+                    <i class="mr-3 fa-solid fa-clock-rotate-left"></i><a href="{{ url_for('admin.history') }}">Quản Lý Lịch</a>
                 </div>
                 <div>
                     <i class="mr-3 fa-solid fa-message"></i><a href="">Tin Nhắn</a>
@@ -219,13 +188,6 @@
                 <div class="flex items-center">
                     <i id="toggleButton" class="fa-solid fa-bars pr-2 fa-lg cursor-pointer"></i>
                     <h1 class="text-2xl font-semibold">Dashboard</h1>
-                </div>
-                <div class="user">
-                    <img src="https://cdn-icons-png.flaticon.com/512/219/219986.png" alt="User Avatar">
-                    <span>Nguyễn Admin</span>
-                    <i class="fa-solid fa-bell"></i>
-                    <i class="fa-solid fa-envelope"></i>
-                    <i class="fa-solid fa-gear"></i>
                 </div>
             </div>
             <main>

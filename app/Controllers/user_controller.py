@@ -1,8 +1,7 @@
-from flask import Blueprint, render_template, request, session, redirect, url_for
+from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from datetime import datetime, timedelta
-from .ReadCSV import read_rooms_from_csv, read_doctors_from_csv, read_time_slots_from_csv, read_specialties_from_csv, read_schedule_from_csv
+from .ReadCSV import read_rooms_from_csv, read_doctors_from_csv, read_time_slots_from_csv, read_schedule_from_csv
 import pandas as pd
-import csv
 import os
 
 user_bp = Blueprint('user', __name__, template_folder='../Views/user')
@@ -30,7 +29,7 @@ def get_week_starts(year, month):
     # Tìm ngày bắt đầu của tuần chứa ngày đầu tiên của tháng
     first_week_start = first_day - timedelta(days=first_day.weekday())
     # Tạo danh sách ngày bắt đầu của 4 tuần trong tháng
-    return [first_week_start + timedelta(weeks=i) for i in range(4)]
+    return [first_week_start + timedelta(weeks=i) for i in range(5)]
 
 # Hàm lấy lịch của bác sĩ theo tháng
 def get_monthly_schedule(doctor_id, year, month):
@@ -40,7 +39,7 @@ def get_monthly_schedule(doctor_id, year, month):
 
     # Xác định ngày bắt đầu của từng tuần trong tháng
     week_starts = get_week_starts(year, month)
-    weekly_schedule = [{"Sáng": [None] * 7, "Chiều": [None] * 7, "Tối": [None] * 7} for _ in range(4)]
+    weekly_schedule = [{"Sáng": [None] * 7, "Chiều": [None] * 7, "Tối": [None] * 7} for _ in range(5)]
 
     # Đọc các tệp CSV cho room và time slot
     room_file_path = os.path.join(os.path.dirname(__file__), '../Models/rooms.csv')
@@ -86,7 +85,37 @@ def get_monthly_schedule(doctor_id, year, month):
                 }
 
     return weekly_schedule
+@user_bp.route('/userProfile')
+def userProfile():
+    doctor_username = session.get('user')  # Lấy doctor_username từ session
+    if not doctor_username:
+        flash('Bạn cần đăng nhập để truy cập hồ sơ.', 'warning')
+        return redirect(url_for('auth.login'))
 
+    year = request.args.get('year', datetime.today().year, type=int)
+    month = request.args.get('month', datetime.today().month, type=int)
+
+    try:
+        doctors = read_doctors_and_users()
+    except Exception as e:
+        flash(f'Lỗi khi tải dữ liệu bác sĩ: {str(e)}', 'danger')
+        return redirect(url_for('user.user'))
+
+    # Kiểm tra xem có bác sĩ nào với doctor_username trong danh sách không
+    doctor = next((doctor for doctor in doctors if doctor['username'] == doctor_username), None)
+    if not doctor:
+        flash('Không tìm thấy bác sĩ.', 'danger')
+        return redirect(url_for('user.user'))
+
+    return render_template(
+        'Profile_users.html',
+        year=year,
+        month=month,
+        doctor_username=doctor_username,
+        doctor_name=doctor['name'],
+        doctor_specialty_name = doctor['specialty_name'],
+        doctor=doctor
+    )
 @user_bp.route('/')
 def user():
     if 'user' in session:
