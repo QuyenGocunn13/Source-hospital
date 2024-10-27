@@ -26,31 +26,36 @@
         {% endif %}
     {% endwith %}
 
-    <!-- Bảng lịch sử -->
-    <h3 class="text-xl font-semibold mb-2">Lịch Sử:</h3>
-    <table class="min-w-full border-collapse border border-gray-300 bg-white shadow rounded">
-        <thead class="bg-blue-600 text-white">
-            <tr>
-                <th class="border border-gray-300 px-4 py-2">ID</th>
-                <th class="border border-gray-300 px-4 py-2">Tháng</th>
-                <th class="border border-gray-300 px-4 py-2">Năm</th>
-                <th class="border border-gray-300 px-4 py-2">Trạng Thái</th>
-                <th class="border border-gray-300 px-4 py-2">Thời Gian</th>
-                <th class="border border-gray-300 px-4 py-2">Hành Động</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in history %}
-            <tr class="hover:bg-gray-100">
-                <td class="border border-gray-300 px-4 py-2">{{ record[0] }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ record[1] }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ record[2] }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ record[3] }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ record[4] }}</td>
-                <td class="border border-gray-300 px-4 py-2"></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- Hiển thị bảng nếu có dữ liệu -->
+    {% if history %}
+    <div class="bg-white p-4 rounded shadow">
+        <button onclick="location.reload()" class="bg-gray-500 text-white rounded p-2 mb-4 hover:bg-gray-600 transition">Cập nhật bảng</button>
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr>
+                    <th class="border border-gray-300 px-4 py-2">ID</th>
+                    <th class="border border-gray-300 px-4 py-2">Tháng</th>
+                    <th class="border border-gray-300 px-4 py-2">Năm</th>
+                    <th class="border border-gray-300 px-4 py-2">Trạng Thái</th>
+                    <th class="border border-gray-300 px-4 py-2">Thời Gian</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in history %}
+                <tr>
+                    <td class="border border-gray-300 px-4 py-2">{{ row['id'] }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ row['month'] }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ row['year'] }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ row['status'] }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ row['timestamp'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <!-- Thông báo khi không có dữ liệu -->
+    <p class="text-center text-gray-600 mt-4">Không có lịch sử tạo lịch.</p>
+    {% endif %}
 </div>
 {% endblock %}

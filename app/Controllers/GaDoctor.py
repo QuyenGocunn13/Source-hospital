@@ -67,17 +67,17 @@ class CSVReader:
                 time_slots.append(TimeSlot(slot_id))
         return time_slots
 
-#def get_month_year():
-#    while True:
-#        try:
-#            year = int(input("Nhập năm (ví dụ: 2024): "))
-#            month = int(input("Nhập tháng (1-12): "))
-#            if 1 <= month <= 12:
-#                return year, month
-#            else:
-#                print("Tháng không hợp lệ! Vui lòng nhập lại.")
-#        except ValueError:
-#            print("Vui lòng nhập năm và tháng hợp lệ.")
+def get_month_year():
+    while True:
+        try:
+            year = int(input("Nhập năm (ví dụ: 2024): "))
+            month = int(input("Nhập tháng (1-12): "))
+            if 1 <= month <= 12:
+                return year, month
+            else:
+                print("Tháng không hợp lệ! Vui lòng nhập lại.")
+        except ValueError:
+            print("Vui lòng nhập năm và tháng hợp lệ.")
 
 def get_valid_days(year, month):
     num_days = calendar.monthrange(year, month)[1]
@@ -140,7 +140,6 @@ class GeneticAlgorithm:
 
             # Kiểm tra trùng lặp lịch trình
             if (doctor_id, room_id, timeslot_id, day) in room_timeslot:
-                print(f"Trùng lặp phát hiện: Bác sĩ {doctor_id}, Phòng {room_id}, Thời gian {timeslot_id} vào ngày {day}/{self.month}/{self.year}")
                 violations += 1500
             room_timeslot[(doctor_id, room_id, timeslot_id, day)] = doctor_id
 
@@ -214,12 +213,22 @@ def write_schedule_to_csv(schedule, file_path):
         for entry in schedule:
             writer.writerow([entry.doctor_id, entry.room_id, entry.time_slot.id, entry.day, entry.month, entry.year])
 
+def run_ga_doctor(month, year):
+    # Xử lý logic với month và year
+    print(f"Chạy GA Doctor với tháng {month} và năm {year}")
 
 if __name__ == "__main__":
-    year = int(sys.argv[1])  # Nhận giá trị từ tham số command line
-    month = int(sys.argv[2])  # Nhận giá trị từ tham số command line
-    valid_days = get_valid_days(year, month)
+    if len(sys.argv) == 3:
+        # Nhận giá trị từ dòng lệnh
+        year = int(sys.argv[1])
+        month = int(sys.argv[2])
+        print(f"Chạy với tham số dòng lệnh: tháng {month}, năm {year}")
+    else:
+        # Nhập tháng và năm từ console
+        year, month = get_month_year()
 
+    valid_days = get_valid_days(year, month)
+    run_ga_doctor(month, year)
     ga = GeneticAlgorithm(doctors, rooms, time_slots, valid_days, month, year)
     best_schedule = ga.run()
 

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from datetime import datetime, timedelta
 from .ReadCSV import read_rooms_from_csv, read_doctors_from_csv, read_time_slots_from_csv, read_specialties_from_csv, read_schedule_from_csv
 import subprocess
@@ -7,6 +7,59 @@ import os
 
 # Khởi tạo Blueprint cho admin
 admin_bp = Blueprint('admin', __name__, template_folder='../Views/admin')
+
+# Hàm ghi lịch sử
+def log_history(month, year, status):
+    history_file = os.path.join(os.path.dirname(__file__), '../Models/history.csv')
+    timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    # Tìm id mới
+    new_id = 1
+    if os.path.exists(history_file):
+        with open(history_file, mode='r', encoding='utf-8') as file:
+            reader = csv.reader(file)
+            next(reader)  # Bỏ qua header
+            for row in reader:
+                if int(row[0]) >= new_id:
+                    new_id = int(row[0]) + 1
+
+    # Mở file để ghi lịch sử
+    with open(history_file, mode='a', newline='', encoding='utf-8') as file:  # Đặt newline=''
+        writer = csv.writer(file)
+        writer.writerow([new_id, month, year, status, timestamp])  # Ghi vào file
+
+# Route chạy GaDoctor.py
+@admin_bp.route('/run_ga_doctor', methods=['POST'])
+def run_ga_doctor():
+    year = request.form.get('year')
+    month = request.form.get('month')
+    print("Month:", request.form.get("month"))
+    print("Year:", request.form.get("year"))
+
+    # Kiểm tra đầu vào
+    if not year or not month or not year.isdigit() or not month.isdigit() or not (1 <= int(month) <= 12):
+        flash('Tháng và năm không hợp lệ!', 'error')
+        return redirect(url_for('admin.history'))
+
+    ga_doctor_path = os.path.join(os.path.dirname(__file__), 'GaDoctor.py')
+
+    try:
+        with subprocess.Popen(['python', ga_doctor_path, year, month], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding='utf-8') as proc:
+            for line in proc.stdout:
+                print(line.strip())
+
+        if proc.returncode == 0:
+            log_history(month, year, "Thành công")  # Ghi lịch sử khi thành công
+            flash("Tạo lịch thành công", 'success')
+        else:
+            error_output = proc.stderr.read()
+            log_history(month, year, "Thất bại")  # Ghi lịch sử khi thất bại
+            flash(f"Có lỗi xảy ra: {error_output}", 'error')
+
+    except Exception as e:
+        flash(f"Lỗi không mong muốn: {str(e)}", 'error')
+
+    return redirect(url_for('admin.history'))
 
 # Hàm lấy danh sách bác sĩ theo room_id
 def get_all_doctors(room_id):
@@ -163,59 +216,16 @@ def doctor_weekly_schedule(doctor_id, week_index):
         first_week=(week_index == 0)
     )
 
-def log_history(month, year, status):
-    history_file = './Models/history.csv'
-    timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    
-    with open(history_file, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        writer.writerow([month, year, status, timestamp])
-
-
-@admin_bp.route('/run_ga_doctor', methods=['POST'])
-def run_ga_doctor():
-    year = request.form.get('year')
-    month = request.form.get('month')
-
-    # Kiểm tra đầu vào
-    if not year.isdigit() or not month.isdigit() or not (1 <= int(month) <= 12):
-        flash('Tháng và năm không hợp lệ!', 'error')
-        return redirect(url_for('admin.dashboardadmin'))  # Chuyển hướng về dashboard
-
-    # Chạy GaDoctor.py với tham số year và month
-    try:
-        result = subprocess.run(['python', '../Controllers/GaDoctor.py', year, month], capture_output=True, text=True)
-        
-        # Kiểm tra kết quả chạy
-        if result.returncode == 0:
-            # Ghi lại lịch sử
-            schedule_file_path = './Models/schedule.csv'
-            if os.path.exists(schedule_file_path) and os.path.getsize(schedule_file_path) > 0:
-                status = "Tạo lịch thành công"
-            else:
-                status = "Tháng này đã tạo, bạn có chắc muốn tạo lịch mới?"
-            
-            # Ghi vào lịch sử
-            log_history(month, year, status)
-            flash(status, 'success')  # Thông báo thành công
-        else:
-            flash(f"Có lỗi xảy ra: {result.stderr}", 'error')  # Thông báo lỗi
-
-    except Exception as e:
-        flash(str(e), 'error')  # Thông báo lỗi
-
-    return redirect(url_for('admin.history'))  # Chuyển hướng về trang lịch sử
-
+# Trang hiển thị lịch sử tạo lịch
 @admin_bp.route('/history', methods=['GET'])
 def history():
-    history_file = './Models/history.csv'
+    history_file = os.path.join(os.path.dirname(__file__), '../Models/history.csv')
     history_data = []
 
     # Đọc dữ liệu từ tệp CSV
     if os.path.exists(history_file):
         with open(history_file, mode='r', encoding='utf-8') as file:
-            reader = csv.reader(file)
-            next(reader)  # Bỏ qua tiêu đề
-            history_data = list(reader)  # Chuyển dữ liệu thành danh sách
+            reader = csv.DictReader(file)  # Dùng DictReader để có tên cột
+            history_data = list(reader)  # Chuyển dữ liệu thành danh sách dictionary
 
     return render_template('history_change.html', history=history_data)
