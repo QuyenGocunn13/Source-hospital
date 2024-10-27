@@ -86,7 +86,37 @@ def get_monthly_schedule(doctor_id, year, month):
                 }
 
     return weekly_schedule
+@user_bp.route('/userProfile')
+def userProfile():
+    doctor_username = session.get('user')  # Lấy doctor_username từ session
+    if not doctor_username:
+        flash('Bạn cần đăng nhập để truy cập hồ sơ.', 'warning')
+        return redirect(url_for('auth.login'))
 
+    year = request.args.get('year', datetime.today().year, type=int)
+    month = request.args.get('month', datetime.today().month, type=int)
+
+    try:
+        doctors = read_doctors_and_users()
+    except Exception as e:
+        flash(f'Lỗi khi tải dữ liệu bác sĩ: {str(e)}', 'danger')
+        return redirect(url_for('user.user'))
+
+    # Kiểm tra xem có bác sĩ nào với doctor_username trong danh sách không
+    doctor = next((doctor for doctor in doctors if doctor['username'] == doctor_username), None)
+    if not doctor:
+        flash('Không tìm thấy bác sĩ.', 'danger')
+        return redirect(url_for('user.user'))
+
+    return render_template(
+        'Profile_users.html',
+        year=year,
+        month=month,
+        doctor_username=doctor_username,
+        doctor_name=doctor['name'],
+        doctor_specialty_name = doctor['specialty_name'],
+        doctor=doctor
+    )
 @user_bp.route('/')
 def user():
     if 'user' in session:

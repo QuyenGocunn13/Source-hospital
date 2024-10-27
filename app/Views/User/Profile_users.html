@@ -130,23 +130,22 @@
     }
 </style>
 
-<h1 class="welcome-text">Xin chào, {{ username }}!</h1>
+<h1 class="welcome-text">Xin chào, {{ doctor_name }}!</h1>
 
 <div class="container">
     <h2 class="subtitle">Thông tin cá nhân</h2>
 
-    {% for doctor in doctors %}
     <div class="profile-info">
         <img src="https://image.pngaaa.com/321/1856321-middle.png" alt="Avatar of {{ doctor.name }}">
         <div class="profile-details">
             <h3>ID Bác sĩ:</h3>
             <p>{{ doctor.doctor_id }}</p>
             <h3>Họ và tên:</h3>
-            <p>{{ doctor.name }}</p>
+            <p>{{ doctor_name }}</p>
             <h3>Chuyên khoa:</h3>
-            <p>{{ doctor.specialty_name }}</p>
+            <p>{{ doctor_specialty_name }}</p>
             <h3>Tài khoản:</h3>
-            <p>{{ doctor.username }}</p>
+            <p>{{ doctor_username }}</p>
             <h3>Mật khẩu:</h3>
             <p id="password-{{ doctor.doctor_id }}" style="display: none;">{{ doctor.password }}</p>
             <span class="toggle-password" onclick="togglePassword('{{ doctor.doctor_id }}')">
@@ -154,7 +153,6 @@
             </span>
         </div>
     </div>
-    {% endfor %}
 </div>
 
 <script>
