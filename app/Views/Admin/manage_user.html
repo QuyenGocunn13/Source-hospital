@@ -25,55 +25,54 @@
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 5px;
-        font-size: 0.875rem; /* Kích thước chữ */
+        font-size: 0.875rem;
     }
 
     .search-container select {
         margin-left: 10px;
     }
 
-    /* Định dạng cho table */
     table {
         width: 100%;
-        border-collapse: collapse; /* Xóa khoảng cách giữa các cell */
-        background-color: #ffffff; /* Màu nền trắng */
+        border-collapse: collapse; 
+        background-color: #ffffff; 
     }
 
     th, td {
-        padding: 12px 15px; /* Thay đổi padding để dễ nhìn hơn */
+        padding: 12px 15px; 
         text-align: left;
-        border-bottom: 1px solid #ddd; /* Đường kẻ cho các hàng */
+        border-bottom: 1px solid #ddd; 
     }
 
     th {
-        background-color: #489cb8; /* Màu nền cho header */
-        color: white; /* Màu chữ cho header */
+        background-color: #489cb8; 
+        color: white; 
     }
 
     tr:hover {
-        background-color: #d1ecf1; /* Màu nền khi hover (xanh dịu hơn) */
+        background-color: #d1ecf1; 
     }
 
     .action-btns {
         display: flex;
-        gap: 10px; /* Khoảng cách giữa các nút */
+        gap: 10px; 
     }
 
     .action-btn {
-        padding: 6px 10px; /* Padding cho nút */
+        padding: 6px 10px; 
         border-radius: 5px;
-        background-color: #cfe2f3; /* Màu nền cho nút (xanh dịu hơn) */
-        color: #333; /* Màu chữ cho nút */
-        text-decoration: none; /* Không gạch chân */
-        transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+        background-color: #cfe2f3; 
+        color: #333; 
+        text-decoration: none; 
+        transition: background-color 0.3s; 
     }
 
     .action-btn:hover {
-        background-color: #a0c4e0; /* Màu nền khi hover (xanh dịu hơn) */
+        background-color: #a0c4e0; 
     }
 
     .action-btn i {
-        margin-right: 5px; /* Khoảng cách giữa icon và chữ */
+        margin-right: 5px; 
     }
 </style>
 
@@ -126,8 +125,8 @@
         for (let i = 0; i < rows.length; i++) {
             const departmentId = rows[i].getAttribute('data-department-id');
             const cells = rows[i].getElementsByTagName('td');
-            const roomIdValue = cells[0].textContent || cells[0].innerText; // Lấy cột Mã Khoa
-            const roomTypeValue = cells[1].textContent || cells[1].innerText; // Lấy cột Tên Khoa
+            const roomIdValue = cells[0].textContent || cells[0].innerText; 
+            const roomTypeValue = cells[1].textContent || cells[1].innerText; 
 
             // Kiểm tra điều kiện hiển thị hàng
             const matchesDepartment = selectedDepartment === "" || departmentId === selectedDepartment;

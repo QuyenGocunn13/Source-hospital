@@ -109,21 +109,13 @@ class GeneticAlgorithm:
     def create_individual(self):
         individual = []
         for doctor in self.doctors:
-            # Đảm bảo rằng mỗi bác sĩ có ít nhất một lịch
-            room = random.choice([room for room in self.rooms if room.specialty_id == doctor.specialty_id]).id
-            time_slot = random.choice(self.time_slots)
-            day = random.choice(self.valid_days)
-            individual.append(Schedule(doctor.id, room, time_slot, day, self.month, self.year))
-            
-            # Chọn ngẫu nhiên số ngày làm việc bổ sung (nếu cần)
-            num_days_working = random.randint(1, 5)  # Số ngày làm việc ngẫu nhiên cho mỗi bác sĩ
+            num_days_working = random.randint(2, 7)  
             for _ in range(num_days_working):
                 room = random.choice([room for room in self.rooms if room.specialty_id == doctor.specialty_id]).id
                 time_slot = random.choice(self.time_slots)
                 day = random.choice(self.valid_days)
                 individual.append(Schedule(doctor.id, room, time_slot, day, self.month, self.year))
         return individual
-
 
     def create_population(self):
         return [self.create_individual() for _ in range(self.population_size)]
@@ -143,23 +135,23 @@ class GeneticAlgorithm:
             doctor_info = next((doctor for doctor in self.doctors if doctor.id == doctor_id), None)
 
             if not room_info or not doctor_info:
-                violations += 5000
+                violations += 1000
                 continue
 
             # Kiểm tra trùng lặp lịch trình
             if (doctor_id, room_id, timeslot_id, day) in room_timeslot:
-                violations += 1500
+                violations += 500
             room_timeslot[(doctor_id, room_id, timeslot_id, day)] = doctor_id
 
             if room_info.type != doctor_info.specialty_name:
-                violations += 1000
+                violations += 300
 
             if (doctor_id, day) not in doctor_day_slots:
                 doctor_day_slots[(doctor_id, day)] = 0
             doctor_day_slots[(doctor_id, day)] += 1
 
             if doctor_day_slots[(doctor_id, day)] > 2:
-                violations += 2000
+                violations += 1000
 
         return violations
 

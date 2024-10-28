@@ -9,37 +9,36 @@
     <title>Bệnh Viện HUIT</title>
     <link rel="icon" href="{{ url_for('static', filename='Assets/huitlogo.png') }}" type="image/png">
     <style>
-        /* Custom nav styles */
         .navbar {
-            background: linear-gradient(to right, #007bff, #0dcaf0); /* Gradient từ xanh đậm đến xanh sáng */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
-            padding: 0.5rem; /* Giảm padding */
+            background: linear-gradient(to right, #007bff, #0dcaf0); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            padding: 0.5rem; 
         }
 
         .navbar a {
-            color: #ffffff; /* Màu chữ trắng */
-            padding: 5px 10px; /* Giảm padding cho các liên kết */
-            border-radius: 5px; /* Bo tròn góc */
-            transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền */
+            color: #ffffff; 
+            padding: 5px 10px;
+            border-radius: 5px; 
+            transition: background-color 0.3s ease; 
         }
 
         .navbar a:hover {
-            background-color: rgba(255, 230, 0, 0.8); /* Màu nền khi hover */
-            color: #000; /* Chữ đen khi hover */
+            background-color: rgba(255, 230, 0, 0.8); 
+            color: #000; 
         }
 
-        /* Nút đăng nhập */
+
         .login-button {
-            background-color: #f39c12; /* Màu nền cam cho nút */
-            color: #ffffff; /* Màu chữ trắng cho nút */
-            padding: 5px 10px; /* Giảm padding */
-            border-radius: 5px; /* Bo tròn góc */
+            background-color: #f39c12; 
+            color: #ffffff;
+            padding: 5px 10px; 
+            border-radius: 5px; 
         }
 
         .login-button:hover {
-            background-color: #e67e22; /* Màu nền cam đậm khi hover */
-            transform: scale(1.05); /* Hiệu ứng phóng to */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bóng đổ khi hover */
+            background-color: #e67e22; 
+            transform: scale(1.05); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
         
     </style>
@@ -69,7 +68,7 @@
 
     <main>
         {% block content %}
-        <!-- Nội dung trang sẽ được chèn tại đây -->
+
         {% endblock %}
     </main>
 

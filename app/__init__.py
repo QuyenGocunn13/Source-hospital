@@ -10,7 +10,7 @@ def create_app():
     app = Flask(__name__)
 
     # Đặt secret_key cho ứng dụng Flask
-    app.secret_key = os.urandom(24)  # Hoặc bạn có thể tự đặt một chuỗi ngẫu nhiên, vd: 'my_secret_key'
+    app.secret_key = os.urandom(24) 
 
     # Đăng ký các Blueprint
     app.register_blueprint(shared_bp, url_prefix='/shared')
@@ -24,10 +24,10 @@ def create_app():
         try:
             # Nếu giá trị là chuỗi, chuyển sang datetime object
             if isinstance(value, str):
-                value = datetime.strptime(value, '%Y-%m-%d')  # Giả sử input là yyyy-mm-dd
+                value = datetime.strptime(value, '%Y-%m-%d') 
             return value.strftime(format)
         except ValueError:
-            return value  # Trả về giá trị ban đầu nếu không thể chuyển đổi
+            return value
 
     @app.route('/')
     def home():
@@ -35,7 +35,6 @@ def create_app():
 
     @app.route('/rooms')
     def rooms():
-        # Lấy đường dẫn đầy đủ đến file CSV
         file_path = os.path.join(app.root_path, 'Models', 'rooms.csv')
         return render_template('/Admin/manage_user.html', rooms=rooms)
 

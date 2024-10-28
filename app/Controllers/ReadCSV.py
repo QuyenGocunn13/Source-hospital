@@ -36,7 +36,6 @@ def read_specialties_from_csv(file_path):
 
 def read_schedule_from_csv(file_path):
     schedule_data = read_csv(file_path)
-    # Chuyển đổi year và month thành int
     for row in schedule_data:
         row['year'] = int(row['year'])  
         row['month'] = int(row['month'])  
