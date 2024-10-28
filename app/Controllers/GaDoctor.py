@@ -109,13 +109,21 @@ class GeneticAlgorithm:
     def create_individual(self):
         individual = []
         for doctor in self.doctors:
-            num_days_working = random.randint(2, 6)  # Số ngày làm việc ngẫu nhiên cho mỗi bác sĩ
+            # Đảm bảo rằng mỗi bác sĩ có ít nhất một lịch
+            room = random.choice([room for room in self.rooms if room.specialty_id == doctor.specialty_id]).id
+            time_slot = random.choice(self.time_slots)
+            day = random.choice(self.valid_days)
+            individual.append(Schedule(doctor.id, room, time_slot, day, self.month, self.year))
+            
+            # Chọn ngẫu nhiên số ngày làm việc bổ sung (nếu cần)
+            num_days_working = random.randint(1, 5)  # Số ngày làm việc ngẫu nhiên cho mỗi bác sĩ
             for _ in range(num_days_working):
                 room = random.choice([room for room in self.rooms if room.specialty_id == doctor.specialty_id]).id
                 time_slot = random.choice(self.time_slots)
                 day = random.choice(self.valid_days)
                 individual.append(Schedule(doctor.id, room, time_slot, day, self.month, self.year))
         return individual
+
 
     def create_population(self):
         return [self.create_individual() for _ in range(self.population_size)]
