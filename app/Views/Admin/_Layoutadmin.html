@@ -10,6 +10,26 @@
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        body::-webkit-scrollbar {
+            width: 12px; 
+        }
+
+        body::-webkit-s crollbar-track {
+            background: rgba(240, 240, 240, 0.5); 
+            border-radius: 10px; 
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: #34495e; 
+            border-radius: 10px; 
+            border: 2px solid rgba(240, 240, 240, 0.5); 
+            transition: background-color 0.3s ease; 
+        }
+
+        body::-webkit-scrollbar-thumb:hover {
+            background-color: #2c3e50; 
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -190,7 +210,7 @@
             <div class="header">
                 <div class="flex items-center">
                     <i id="toggleButton" class="fa-solid fa-bars pr-2 fa-lg cursor-pointer"></i>
-                    <h1 class="text-2xl font-semibold">Dashboard</h1>
+                    <h1 class="text-2xl font-semibold">Menu</h1>
                 </div>
             </div>
             <main>

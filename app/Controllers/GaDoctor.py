@@ -134,11 +134,11 @@ class GeneticAlgorithm:
             room_info = next((room for room in self.rooms if room.id == room_id), None)
             doctor_info = next((doctor for doctor in self.doctors if doctor.id == doctor_id), None)
 
+            # Kiểm tra trùng lặp lịch trình
             if not room_info or not doctor_info:
                 violations += 1000
                 continue
 
-            # Kiểm tra trùng lặp lịch trình
             if (doctor_id, room_id, timeslot_id, day) in room_timeslot:
                 violations += 500
             room_timeslot[(doctor_id, room_id, timeslot_id, day)] = doctor_id
@@ -214,7 +214,6 @@ def write_schedule_to_csv(schedule, file_path):
             writer.writerow([entry.doctor_id, entry.room_id, entry.time_slot.id, entry.day, entry.month, entry.year])
 
 def run_ga_doctor(month, year):
-    # Xử lý logic với month và year
     print(f"Chạy GA Doctor với tháng {month} và năm {year}")
 
 if __name__ == "__main__":
